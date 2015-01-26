@@ -1,1 +1,12 @@
-/* Empty. Add your own CSS if you like */
+/* Styles go here! */
+/* line 3, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+.button-hungry {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-size: 400%; }
+
+/* line 11, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+.center {
+  text-align: center; }
+
+/*# sourceMappingURL=style.css.map */
