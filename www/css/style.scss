@@ -1,11 +1,26 @@
 /* Styles go here! */
 
+/* Color Collection */
+/** Color set 1: Vintage Romatic **/
+$color-vr-1: #260126;
+$color-vr-2: #59323C;
+$color-vr-3: #F2EEB3;
+$color-vr-4: #BFAF80;
+$color-vr-5: #8C6954;
+
 .button-hungry {
  
     padding-top: 30px;
     padding-bottom: 30px;
     
     font-size: 400%
+}
+
+.recipe-item-header {
+
+    font-weight: bold;
+    background-color: $color-vr-2;
+    color: white;
 }
 
 .center {
