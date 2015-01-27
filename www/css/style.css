@@ -1,20 +1,29 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow);
 /* Styles go here! */
 /* Color Collection */
 /** Color set 1: Vintage Romatic **/
-/* line 11, C:/Users/peter_000/Documents/introHCI/eggsnramen/www/css/style.scss */
+/* line 13, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .button-hungry {
   padding-top: 30px;
   padding-bottom: 30px;
   font-size: 400%; }
 
-/* line 19, C:/Users/peter_000/Documents/introHCI/eggsnramen/www/css/style.scss */
+/* line 21, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .recipe-item-header {
   font-weight: bold;
   background-color: #59323C;
   color: white; }
 
-/* line 26, C:/Users/peter_000/Documents/introHCI/eggsnramen/www/css/style.scss */
+/* line 30, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+.dash-card .card-title {
+  font-size: 175%; }
+
+/* line 37, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .center {
   text-align: center; }
+
+/* line 41, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+* {
+  font-family: 'PT Sans Narrow'; }
 
 /*# sourceMappingURL=style.css.map */

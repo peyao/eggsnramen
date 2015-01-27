@@ -8,6 +8,8 @@ $color-vr-3: #F2EEB3;
 $color-vr-4: #BFAF80;
 $color-vr-5: #8C6954;
 
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow);
+
 .button-hungry {
  
     padding-top: 30px;
@@ -23,6 +25,19 @@ $color-vr-5: #8C6954;
     color: white;
 }
 
+.dash-card {
+    
+    .card-title {
+
+        font-size: 175%;
+    }
+    
+}
+
 .center {
     text-align: center;   
+}
+
+* {
+    font-family: 'PT Sans Narrow';   
 }
