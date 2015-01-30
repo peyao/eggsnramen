@@ -1,6 +1,7 @@
-eggsnramen webapp
-
 peter yao, chloe lopez, joshua miller
+
+
+eggsnramen webapp
 =================
 
 Our webapp uses the Ionic framework which makes developing a mobile web page very easy.
