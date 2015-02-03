@@ -47,6 +47,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       }
     })
+    
+    // INGREDIENTS CHECKBOXES
+    .state('tab.ingredients', {
+      url: '/cookingtime/ingredients',
+      views: {
+        'tab-dash': { // View is tab-dash because it transitions from dashboard
+          templateUrl: 'templates/tab-ingredients.html',
+          controller: 'IngredientsCtrl'
+        }
+      }
+    })
+  
+    // INGREDIENTS RESULTS
+    .state('tab.ingredients-results', {
+      url: '/cookingtime/ingredients/results',
+      views: {
+        'tab-dash': { // View is tab-dash because it transitions from dashboard
+          templateUrl: 'templates/tab-ingredients-results.html',
+          controller: 'IngredientsResultsCtrl'
+        }
+      }
+    })
 
     .state('tab.friends', {
       url: '/friends',
@@ -73,16 +95,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         'tab-account': {
           templateUrl: 'templates/tab-account.html',
           controller: 'AccountCtrl'
-        }
-      }
-    })
-  
-    .state('tab.ingredients', {
-      url: '/ingredients',
-      views: {
-        'tab-ingredients': {
-          templateUrl: 'templates/tab-ingredients.html',
-          controller: 'IngredientsCtrl'
         }
       }
     });

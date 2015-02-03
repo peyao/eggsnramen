@@ -1,0 +1,28 @@
+<ion-view title="Your recipes!">
+  <ion-content padding="true">
+    <p >
+      {{ recipe.name }}
+    </p>
+    
+    <div class="list card" ng-repeat="recipe in recipeResults">
+      
+      <!-- Recipe card header -->
+      <div class="item item-icon-right">
+        <i class="icon ion-leaf balanced"></i>
+        <h2>{{ recipe.name }}</h2>
+        <p>{{ recipe.description }}</p>
+      </div>
+      
+      <!-- Recipe image -->
+      <div class="item item-image">
+        <img ng-src="{{ recipe.image_original }}"
+      </div>
+      
+      <a class="item item-icon-left assertive left" href="">
+        <i class="icon ion-music-note"></i>
+        Cook this now!
+      </a>
+      
+    </div>
+  </ion-content>
+</ion-view>

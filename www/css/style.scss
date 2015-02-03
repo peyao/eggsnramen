@@ -8,36 +8,52 @@ $color-vr-3: #F2EEB3;
 $color-vr-4: #BFAF80;
 $color-vr-5: #8C6954;
 
+$color-description: #ADADAD;
+
 @import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow);
 
 .button-hungry {
- 
-    padding-top: 30px;
-    padding-bottom: 30px;
-    
-    font-size: 400%
+
+  padding-top: 30px;
+  padding-bottom: 30px;
+  
+  font-size: 400%
 }
 
 .recipe-item-header {
 
-    font-weight: bold;
-    background-color: $color-vr-2;
-    color: white;
+  font-weight: bold;
+  background-color: $color-vr-2;
+  color: white;
 }
 
 .dash-card {
+  
+  .card-title {
     
-    .card-title {
+    font-size: 175%;
+  }
+  
+}
 
-        font-size: 175%;
-    }
-    
+.ingredients-list {}
+
+.description {
+  color: $color-description;
 }
 
 .center {
-    text-align: center;   
+  text-align: center;
+}
+
+.left {
+  text-align: left; 
+}
+
+.right {
+  text-align: right; 
 }
 
 * {
-    font-family: 'PT Sans Narrow';   
+  font-family: 'PT Sans Narrow' !important;   
 }

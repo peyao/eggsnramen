@@ -1,6 +1,5 @@
 peter yao, chloe lopez, joshua miller
 
-
 eggsnramen webapp
 =================
 
