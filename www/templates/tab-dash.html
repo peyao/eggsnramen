@@ -1,4 +1,4 @@
-<ion-view title="eggs n ramen">
+<ion-view title="eggsnramen">
 
     <!-- Buttons on Navbar -->
     <ion-nav-buttons side="left">
@@ -12,9 +12,9 @@
     <ion-content class="padding">
        
         <!-- "I'm Hungry" Button -->
-        <div class="center">
-            <button class="button button-hungry button-block button-assertive">I'm Hungry!</button>
-        </div>
+        <a class="button button-hungry button-block button-assertive" ui-sref="tab.ingredients">
+          I'm Hungry!
+        </a>
         
         <!-- Your Recent Section-->
         <br>
@@ -54,7 +54,7 @@
         <br>
         <div class="dash-card">
             <span class="card-title">Popular</span>
-            <div class="row">
+            <div class="row" data-equal-heights>
 
                 <!-- Your Recent 1 -->
                 <div class="col">
