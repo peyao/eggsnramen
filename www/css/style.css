@@ -2,39 +2,40 @@
 /* Styles go here! */
 /* Color Collection */
 /** Color set 1: Vintage Romatic **/
-/* line 15, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/**  Colors by Ionic **/
+/* line 26, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .button-hungry {
   padding-top: 30px;
   padding-bottom: 30px;
   font-size: 400%; }
 
-/* line 23, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 34, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .recipe-item-header {
   font-weight: bold;
   background-color: #59323C;
   color: white; }
 
-/* line 32, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 43, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .dash-card .card-title {
   font-size: 175%; }
 
-/* line 41, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 52, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .description {
   color: #ADADAD; }
 
-/* line 45, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 56, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .center {
   text-align: center; }
 
-/* line 49, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 60, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .left {
   text-align: left; }
 
-/* line 53, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 64, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 .right {
   text-align: right; }
 
-/* line 57, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
+/* line 68, C:/Users/Doomie/Documents/GitHub/eggsnramen/www/css/style.scss */
 * {
   font-family: 'PT Sans Narrow' !important; }
 
