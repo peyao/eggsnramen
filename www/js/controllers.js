@@ -14,30 +14,30 @@ angular.module('starter.controllers', [])
 .controller('AccountCtrl', function($scope) {
 })
 
-.controller('IngredientsCtrl', function($scope){
-  
-  $scope.ingredients = ingredientList;
-})
 
-.controller('IngredientsResultsCtrl', function($scope){
+
+// Controller for 'tab-ingredients.html'
+.controller('IngredientsCtrl', function($scope, $rootScope, $state, UserRecipeListService){
+
+  $scope.ingredients = ingredientList;
   
-  $scope.recipeResults = recipes;
+  $scope.addIngredients = function(checkedList){    
+
+    UserRecipeListService.deleteSortedRecipes();
+    UserRecipeListService.sortRecipes(checkedList, recipes);
+
+    // Redirect to the results
+    $state.go('tab.ingredients-results');
+  };
+})
+// Controller for 'tab-ingredients-results.html'
+.controller('IngredientsResultsCtrl', function($scope, $rootScope, UserRecipeListService){
   
-  $scope.getResults = function(ingredientsArr){
-    
-    // Example: ingredientsArr = [ 'eggs', 'ramen' ]
-    
-    // ALGORITHM
-    // ---------
-    // First find a recipe that uses the FIRST ingredient, then increment the priority.
-    // On that same recipe, use our next ingredientsArr element and see if it matches
-    // the recipe's other 'required_items' array. Every element that matches will
-    // increment the priority. When this recipe has finished assigning priority,
-    // we look for another recipe that has the first element of our ingredientsArr,
-    // and repeat.
-    
-  }
+  $rootScope.recipeResults = UserRecipeListService.getSortedRecipes();
 });
+
+
+
 
 // Temporary ingredients database
 var ingredientList = [{
@@ -45,7 +45,6 @@ var ingredientList = [{
   name: 'egg', // don't use plural?
   rarity: 0, // rarity goes from 0-2 (0 most common; 1 medium; 2 rare)
   description: 'something a chicken lays', // limit to 7 words MAX! won't fit screen!
-  used_with: ['ramen', 'sandwich bread']
   
 }, {
 
@@ -84,9 +83,12 @@ var recipes = [{
   ],
   
   // these may bump the recipe higher in results list
+  // DO NOT DUPLICATE THESE WITH THE ITEMS IN required_items! Things will break!
   optional_items: [
     'lettuce'
   ],
+  
+  priority: 0,
   
   // if you have to use imgur links, you can grab smaller versions by appending
   // 's'mall, 't'humbnail, 'm'edium
@@ -96,18 +98,21 @@ var recipes = [{
   //      notice the 't'?
   image_original: "http://i.imgur.com/bpLKCav.jpg",
   image_thumb: "http://i.imgur.com/bpLKCavt.jpg",
-  image_medium: "http://i.imgur.com/bpLKCavm.jpg",
+  image_medium: "http://i.imgur.com/bpLKCavm.jpg"
   
 }, {
   
   name: 'recipe2',
   description: 'lorem ipsum blah',
   difficulty: '1',
+  priority: 0,
   
   required_items: [],
-  optional_items: [],
+  optional_items: ['tuna can'],
   
   image_original: "http://i.imgur.com/bpLKCav.jpg",
   image_thumb: "http://i.imgur.com/bpLKCavt.jpg",
-  image_medium: "http://i.imgur.com/bpLKCavm.jpg",
+  image_medium: "http://i.imgur.com/bpLKCavm.jpg"
+  
 }];
+

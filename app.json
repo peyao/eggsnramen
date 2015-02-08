@@ -1,7 +1,7 @@
 {
-  "name": "Ionic Starter",
-  "description": "A simple Ionic app for Heroku",
-  "repository": "https://github.com/driftyco/ionic-heroku-button",
+  "name": "eggsnramen",
+  "description": "A recipe app for all cookers!",
+  "repository": "https://github.com/cogs120-pcj/eggsnramen",
   "logo": "http://ionicframework.com/img/ionic-logo-blog.png",
   "keywords": ["ionic", "static"]
 }

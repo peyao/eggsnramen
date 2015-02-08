@@ -1,14 +1,20 @@
 <ion-view title="Check off your ingredients!">
   <ion-content class="">    
-    <ion-checkbox class="ingredients-list" ng-repeat="ingredient in ingredients">
-      {{ ingredient.name }}
-      <div class="description">{{ ingredient.description }}</div>
-    </ion-checkbox>
+
+    <!--
+    <form ng-submit="addIngredients(( ingredients | filter:{selected: true} ))">
+    -->
     
-    <div class="padding"> <!-- padding class makes the button not touch the edges -->
-      <a class="button button-hungry button-block button-positive" ui-sref="tab.ingredients-results">
-        Next
-      </a>
-    </div>
+    <form ng-submit="addIngredients(( ingredients | filter:{selected: true} ))">
+      <ion-checkbox class="ingredients-list" ng-repeat="ingredient in ingredients" ng-model="ingredient.selected">
+        {{ ingredient.name }}
+        <div class="description">{{ ingredient.description }}</div>
+      </ion-checkbox>
+      
+      <div class="padding"> <!-- padding class makes the button not touch the edges -->
+        <button type="submit" class="button button-hungry button-block button-positive">Next</button>
+      </div>
+    </form>
+
   </ion-content>
 </ion-view>

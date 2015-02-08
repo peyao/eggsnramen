@@ -1,10 +1,10 @@
-angular.module('starter.services', [])
+var servicesModule = angular.module('starter.services', [])
 
 /**
  * A simple example service that returns some data.
  */
 
-.factory('Friends', function() {
+servicesModule.factory('Friends', function() {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -23,5 +23,120 @@ angular.module('starter.services', [])
       // Simple index lookup
       return friends[friendId];
     }
-  }
+  };
+});
+
+// Manages the User's Recipe List
+servicesModule.factory('UserRecipeListService', function(){
+
+  // This collects `why` the recipe was selected (due to which ingredients)
+  //var whyResultIngredientList = [];
+  
+  var sortedRecipes = [];
+
+  // sortByKey
+  // Input  :: String matching JSON key you want to sort.
+  // Output :: Return 1 if objA["key"] > objB["key"], -1 if opposite, and 0 if equals.
+  // Usage  :: yourArray.sort( sortByKey("key") );
+  var sortByKey = function(key){
+    
+    return function(a,b) {
+
+      if( a[key] < b[key] ) {
+        return 1;
+      }
+
+      else if ( a[key] > b[key] ) {
+        return -1;
+      }
+
+      return 0;
+    };
+  };
+
+  return {
+
+    // sortRecipes
+    // Input  ::  checkedArray - An array of all the checked ingredients
+    //            recipes - JSON object with all the available recipes
+    // Output ::  Nothing.
+    sortRecipes: function(checkedArray, recipes) {
+
+      // ALGORITHM
+      // ---------
+      // First find a recipe that uses the FIRST ingredient, then increment the priority.
+      // On that same recipe, use our next ingredientsArr element and see if it matches
+      // the recipe's other 'required_items' array. Every element that matches will
+      // increment the priority. When this recipe has finished assigning priority,
+      // we look for another recipe that has the first element of our ingredientsArr,
+      // and repeat.
+
+      var matchedRecipes = [];
+
+      // Makes a deep copy of recipes so we don't affect the original JSON file.
+      var recipesCopy = [];
+      recipesCopy = angular.copy(recipes);
+
+      for ( var i = 0; i < checkedArray.length; ++i ) {
+        
+        for ( var j = 0; j < recipesCopy.length; ++j ) {
+          
+          //$window.alert('Checking recipe: ' + recipes[j].name);
+          
+          // Check required_items
+          for ( var k = 0; k < recipesCopy[j].required_items.length; ++k ) {
+            
+            /*
+            $window.alert('Match?: ' + '"' +  
+                          recipes[j].required_items[k] + '" and "' + 
+                          checkedArr[i].name + '"');
+            */
+            
+            if ( checkedArray[i].name === recipesCopy[j].required_items[k] ) {
+
+              //$window.alert('required_items: ' + recipes[j].required_items[k]);
+              
+              // increment priority by 2, because it is REQUIRED
+              recipesCopy[j].priority = recipesCopy[j].priority + 2;
+              //whyResultIngredientList.push(checkedArr[i].name); name will get added twice
+            }
+          }
+
+          // Check optional_items
+          for ( var k = 0; k < recipesCopy[j].optional_items.length; ++k ) {
+
+            if ( checkedArray[i].name === recipesCopy[j].optional_items[k] ) {
+
+              // increment priority by 1, because it is OPTIONAL
+              recipesCopy[j].priority++;
+            }
+          }
+        }
+      }
+
+      // We will collect all matched recipes if their priority was modified
+      for ( var i = 0; i < recipesCopy.length; ++i ) {
+        if ( recipesCopy[i].priority > 0 ) {
+          
+          matchedRecipes.push(recipesCopy[i]);
+        }
+      }
+      
+      // Sort the recipe list matchedRecipes based on 'priority'
+      sortedRecipes = matchedRecipes.sort(sortByKey('priority'));
+    },
+
+    getSortedRecipes: function(){
+
+      return sortedRecipes;
+    },
+
+    deleteSortedRecipes: function(){
+
+      //delete deleteThis;
+      console.log("clearSortedRecipes is called.");
+      sortedRecipes = [];
+    }
+
+  };
 });
