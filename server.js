@@ -1,10 +1,30 @@
 var express = require('express'),
     app = express();
 
-//var morgan = require('morgan');
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://eggsnramen:iloveeggs!@ds053688.mongolab.com:53688/heroku_app33525076');
+
+var ingredients = require('./routes/ingredients.js');
+var recipes = require('./routes/recipes.js');
+app.use('/api', ingredients);
+app.use('/api', recipes);
+
+//var models = require('./models.js');
+/*
+mongoose.model('ingredients',
+{
+	name: String,
+	rarity: Number,
+	description: String
+});
+app.get('/ingredients', function(req, res){
+	mongoose.model('ingredients').find(function(err, ingredients){
+		res.send(ingredients);
+	});
+});
+*/
 
 app.use(express.static('www'));
-//app.use(morgan('dev'));
 
 // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
 app.all('*', function(req, res, next) {

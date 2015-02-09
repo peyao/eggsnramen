@@ -1,6 +1,23 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {
+
+  // Testing MongoDB commands
+  $scope.test = function() {
+
+    var ingredient = new Ingredient({
+
+      name: "test ingredient",
+      rarity: 2,
+      description: "this is a test!"
+    });
+
+    Ingredient.create(ingredient, function(err, ingredient){
+
+      if (err) console.log(err);
+      else console.log(ingredient);
+    });
+  };
 })
 
 .controller('FriendsCtrl', function($scope, Friends) {
@@ -17,19 +34,46 @@ angular.module('starter.controllers', [])
 
 
 // Controller for 'tab-ingredients.html'
-.controller('IngredientsCtrl', function($scope, $rootScope, $state, UserRecipeListService){
+.controller('IngredientsCtrl', function($scope, $state, UserRecipeListService, $ionicPopup){
 
   $scope.ingredients = ingredientList;
   
   $scope.addIngredients = function(checkedList){    
 
-    UserRecipeListService.deleteSortedRecipes();
-    UserRecipeListService.sortRecipes(checkedList, recipes);
+    // Check if user actually selected any ingredients
+    if (checkedList.length === 0) {
 
-    // Redirect to the results
-    $state.go('tab.ingredients-results');
+      // If they haven't selected any ingredients, we have to alert them.
+      $ionicPopup.alert({
+
+        title: 'Select some ingredients first!',
+      });
+    }
+
+    // If they have selected ingredients, we can proceed with gathering recipes
+    else {
+
+      UserRecipeListService.deleteSortedRecipes();
+
+      // sortRecipes returns 'true' if recipes were found
+      if ( !UserRecipeListService.sortRecipes(checkedList, recipes) ) {
+
+        $ionicPopup.alert({
+
+          title: 'Sorry, no recipes were found with your current selection of ingredients.<br>' +
+                  '<br>Please try selecting some more ingredients!'
+        });
+      }
+
+      else {
+
+        // Redirect to the results
+        $state.go('tab.ingredients-results');
+      }
+    }
   };
 })
+
 // Controller for 'tab-ingredients-results.html'
 .controller('IngredientsResultsCtrl', function($scope, $rootScope, UserRecipeListService){
   
@@ -38,7 +82,7 @@ angular.module('starter.controllers', [])
 
 
 
-
+/*
 // Temporary ingredients database
 var ingredientList = [{
   
@@ -88,7 +132,9 @@ var recipes = [{
     'lettuce'
   ],
   
-  priority: 0,
+  total_priority: 0,
+  required_priority: 0,
+  optional_priority: 0,
   
   // if you have to use imgur links, you can grab smaller versions by appending
   // 's'mall, 't'humbnail, 'm'edium
@@ -105,7 +151,10 @@ var recipes = [{
   name: 'recipe2',
   description: 'lorem ipsum blah',
   difficulty: '1',
-  priority: 0,
+
+  total_priority: 0,
+  required_priority: 0,
+  optional_priority: 0,
   
   required_items: [],
   optional_items: ['tuna can'],
@@ -115,4 +164,5 @@ var recipes = [{
   image_medium: "http://i.imgur.com/bpLKCavm.jpg"
   
 }];
+*/
 

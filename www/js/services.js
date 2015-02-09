@@ -59,7 +59,8 @@ servicesModule.factory('UserRecipeListService', function(){
     // sortRecipes
     // Input  ::  checkedArray - An array of all the checked ingredients
     //            recipes - JSON object with all the available recipes
-    // Output ::  Nothing.
+    // Output ::  bool true - found recipes
+    //            bool false - no recipes found
     sortRecipes: function(checkedArray, recipes) {
 
       // ALGORITHM
@@ -77,14 +78,14 @@ servicesModule.factory('UserRecipeListService', function(){
       var recipesCopy = [];
       recipesCopy = angular.copy(recipes);
 
-      for ( var i = 0; i < checkedArray.length; ++i ) {
+      for ( i = 0; i < checkedArray.length; ++i ) {
         
-        for ( var j = 0; j < recipesCopy.length; ++j ) {
+        for ( j = 0; j < recipesCopy.length; ++j ) {
           
           //$window.alert('Checking recipe: ' + recipes[j].name);
           
           // Check required_items
-          for ( var k = 0; k < recipesCopy[j].required_items.length; ++k ) {
+          for ( k = 0; k < recipesCopy[j].required_items.length; ++k ) {
             
             /*
             $window.alert('Match?: ' + '"' +  
@@ -97,33 +98,48 @@ servicesModule.factory('UserRecipeListService', function(){
               //$window.alert('required_items: ' + recipes[j].required_items[k]);
               
               // increment priority by 2, because it is REQUIRED
-              recipesCopy[j].priority = recipesCopy[j].priority + 2;
+              recipesCopy[j].required_priority = recipesCopy[j].required_priority + 2;
               //whyResultIngredientList.push(checkedArr[i].name); name will get added twice
             }
           }
 
           // Check optional_items
-          for ( var k = 0; k < recipesCopy[j].optional_items.length; ++k ) {
+          for ( k = 0; k < recipesCopy[j].optional_items.length; ++k ) {
 
             if ( checkedArray[i].name === recipesCopy[j].optional_items[k] ) {
 
               // increment priority by 1, because it is OPTIONAL
-              recipesCopy[j].priority++;
+              recipesCopy[j].optional_priority++;
             }
           }
         }
       }
 
       // We will collect all matched recipes if their priority was modified
-      for ( var i = 0; i < recipesCopy.length; ++i ) {
-        if ( recipesCopy[i].priority > 0 ) {
+      for ( i = 0; i < recipesCopy.length; ++i ) {
+
+        recipesCopy[i].total_priority = recipesCopy[i].required_priority + 
+                                        recipesCopy[i].optional_priority;
+
+        if ( recipesCopy[i].required_priority > 0 ) {
           
           matchedRecipes.push(recipesCopy[i]);
         }
       }
+
+      console.log("matchedRecipes.length: " + matchedRecipes.length);
       
       // Sort the recipe list matchedRecipes based on 'priority'
       sortedRecipes = matchedRecipes.sort(sortByKey('priority'));
+
+      // Return whether or not we have found recipes
+      if (matchedRecipes.length > 0) {
+        
+        return true; // Found recipes
+      }
+      else {
+        return false; // Did not find recipes
+      }
     },
 
     getSortedRecipes: function(){
