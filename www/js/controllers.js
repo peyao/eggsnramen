@@ -3,21 +3,15 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope) {
 
   // Testing MongoDB commands
+  /*
   $scope.test = function() {
 
-    var ingredient = new Ingredient({
-
-      name: "test ingredient",
-      rarity: 2,
-      description: "this is a test!"
-    });
-
-    Ingredient.create(ingredient, function(err, ingredient){
-
-      if (err) console.log(err);
-      else console.log(ingredient);
+    // Works!
+    $http.get('/api/recipes').success(function(data, status, headers, config){
+      console.log("data: " + data[0].name);
     });
   };
+  */
 })
 
 .controller('FriendsCtrl', function($scope, Friends) {
@@ -34,9 +28,19 @@ angular.module('starter.controllers', [])
 
 
 // Controller for 'tab-ingredients.html'
-.controller('IngredientsCtrl', function($scope, $state, UserRecipeListService, $ionicPopup){
+.controller('IngredientsCtrl', function($scope, $state, $http, UserRecipeListService, $ionicPopup){
 
-  $scope.ingredients = ingredientList;
+  var recipes = [];
+
+  // Grab Ingredients from MongoDB
+  $http.get('/api/ingredients').success(function(data, status, headers, config){
+    $scope.ingredients = data;
+  });
+
+  // Grab Recipes from MongoDB
+  $http.get('/api/recipes').success(function(data, status, headers, config){
+    recipes = data;
+  });
   
   $scope.addIngredients = function(checkedList){    
 
