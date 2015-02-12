@@ -50,7 +50,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     
     // INGREDIENTS CHECKBOXES
     .state('tab.ingredients', {
-      url: '/cookingtime/ingredients',
+      url: '/ingredients',
       views: {
         'tab-dash': { // View is tab-dash because it transitions from dashboard
           templateUrl: 'templates/tab-ingredients.html',
@@ -61,7 +61,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   
     // INGREDIENTS RESULTS
     .state('tab.ingredients-results', {
-      url: '/cookingtime/ingredients/results',
+      url: '/ingredients/results',
       views: {
         'tab-dash': { // View is tab-dash because it transitions from dashboard
           templateUrl: 'templates/tab-ingredients-results.html',

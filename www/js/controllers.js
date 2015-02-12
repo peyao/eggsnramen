@@ -1,6 +1,17 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {
+
+  // Testing MongoDB commands
+  /*
+  $scope.test = function() {
+
+    // Works!
+    $http.get('/api/recipes').success(function(data, status, headers, config){
+      console.log("data: " + data[0].name);
+    });
+  };
+  */
 })
 
 .controller('FriendsCtrl', function($scope, Friends) {
@@ -14,38 +25,94 @@ angular.module('starter.controllers', [])
 .controller('AccountCtrl', function($scope) {
 })
 
-.controller('IngredientsCtrl', function($scope){
+
+
+// Controller for 'tab-ingredients.html'
+.controller('IngredientsCtrl', 
+  function($scope, $state, $http, UserRecipeListService, $ionicPopup, $ionicLoading,
+           $timeout, $rootScope){
+
+  // Show loading screen
+  $ionicLoading.show({
+    delay: 50,
+    noBackdrop: true
+  });
+
+  var recipes = []; // Temporary variable holding the recipes grabbed from DB
+
+  // Grab Ingredients from MongoDB
+  if (typeof $rootScope.ingredients == 'undefined' ) {
+    $http.get('/api/ingredients').success(function(data, status, headers, config){
+      $rootScope.ingredients = data;
+
+      // Hide loading screen when loading is finished
+      $ionicLoading.hide();
+    });
+  }
+  else {
+    $ionicLoading.hide();
+  }
+
+  // Grab Recipes from MongoDB
+  $http.get('/api/recipes').success(function(data, status, headers, config){
+    recipes = data;
+  });
   
-  $scope.ingredients = ingredientList;
+  $scope.addIngredients = function(checkedList){    
+
+    // Check if user actually selected any ingredients
+    if (checkedList.length === 0) {
+
+      // If they haven't selected any ingredients, we have to alert them.
+      $ionicPopup.alert({
+
+        title: 'Select some ingredients first!',
+      });
+    }
+
+    // If they have selected ingredients, we can proceed with gathering recipes
+    else {
+
+      UserRecipeListService.deleteSortedRecipes();
+
+      $ionicLoading.show();
+      // sortRecipes returns 'true' if recipes were found
+      if ( !UserRecipeListService.sortRecipes(checkedList, recipes) ) {
+
+        $ionicPopup.alert({
+
+          title: 'Sorry, no recipes were found with your current selection of ingredients.<br>' +
+                  '<br>Please try selecting some more ingredients!'
+        });
+        $ionicLoading.hide();
+      }
+
+      else {
+
+        // Redirect to the results
+        $state.go('tab.ingredients-results');
+      }
+    }
+  };
 })
 
-.controller('IngredientsResultsCtrl', function($scope){
+// Controller for 'tab-ingredients-results.html'
+.controller('IngredientsResultsCtrl', 
+  function($scope, $rootScope, $ionicLoading, UserRecipeListService){
   
-  $scope.recipeResults = recipes;
-  
-  $scope.getResults = function(ingredientsArr){
-    
-    // Example: ingredientsArr = [ 'eggs', 'ramen' ]
-    
-    // ALGORITHM
-    // ---------
-    // First find a recipe that uses the FIRST ingredient, then increment the priority.
-    // On that same recipe, use our next ingredientsArr element and see if it matches
-    // the recipe's other 'required_items' array. Every element that matches will
-    // increment the priority. When this recipe has finished assigning priority,
-    // we look for another recipe that has the first element of our ingredientsArr,
-    // and repeat.
-    
-  }
+  $rootScope.recipeResults = UserRecipeListService.getSortedRecipes();
+  $ionicLoading.hide();
 });
 
+
+
+/*
 // Temporary ingredients database
 var ingredientList = [{
   
   name: 'egg', // don't use plural?
   rarity: 0, // rarity goes from 0-2 (0 most common; 1 medium; 2 rare)
   description: 'something a chicken lays', // limit to 7 words MAX! won't fit screen!
-  used_with: ['ramen', 'sandwich bread']
   
 }, {
 
@@ -84,9 +151,14 @@ var recipes = [{
   ],
   
   // these may bump the recipe higher in results list
+  // DO NOT DUPLICATE THESE WITH THE ITEMS IN required_items! Things will break!
   optional_items: [
     'lettuce'
   ],
+  
+  total_priority: 0,
+  required_priority: 0,
+  optional_priority: 0,
   
   // if you have to use imgur links, you can grab smaller versions by appending
   // 's'mall, 't'humbnail, 'm'edium
@@ -96,18 +168,25 @@ var recipes = [{
   //      notice the 't'?
   image_original: "http://i.imgur.com/bpLKCav.jpg",
   image_thumb: "http://i.imgur.com/bpLKCavt.jpg",
-  image_medium: "http://i.imgur.com/bpLKCavm.jpg",
+  image_medium: "http://i.imgur.com/bpLKCavm.jpg"
   
 }, {
   
   name: 'recipe2',
   description: 'lorem ipsum blah',
   difficulty: '1',
+
+  total_priority: 0,
+  required_priority: 0,
+  optional_priority: 0,
   
   required_items: [],
-  optional_items: [],
+  optional_items: ['tuna can'],
   
   image_original: "http://i.imgur.com/bpLKCav.jpg",
   image_thumb: "http://i.imgur.com/bpLKCavt.jpg",
-  image_medium: "http://i.imgur.com/bpLKCavm.jpg",
+  image_medium: "http://i.imgur.com/bpLKCavm.jpg"
+  
 }];
+*/
+

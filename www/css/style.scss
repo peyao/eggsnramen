@@ -19,23 +19,23 @@ $assertive:                       #ef4e3a !default;
 $royal:                           #8a6de9 !default;
 $dark:                            #444 !default;
 
-$color-description: #ADADAD;
+$color-description: #adadad;
 
 @import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow);
 
 .button-hungry {
-
-  padding-top: 30px;
-  padding-bottom: 30px;
   
-  font-size: 400%
+  box-shadow: 2px 2px 2px #888;
+  font-size: 400%;
+  padding-bottom: 30px;
+  padding-top: 30px;
 }
 
 .recipe-item-header {
 
-  font-weight: bold;
   background-color: $color-vr-2;
   color: white;
+  font-weight: bold;
 }
 
 .dash-card {
