@@ -1,11 +1,7 @@
 {
-  "version": 3,
-  "file": "style.css",
-  "sources": [
-    "style.scss"
-  ],
-  "sourcesContent": [],
-  "mappings": "AAuBA,AAEA,AAEE,AAAa,AACb,AAAgB,AAEhB,AAAW,AAGb,AAEE,AAAa,AACb,AA/BW,AAgCX,AAAO,AAGT,AAAW,AAIP,AAAW,AAOf,AACE,AA/BkB,AAkCpB,AACE,AAAY,AAGd,AACE,AAAY,AAGd,AACE,AAAY,AAGd,AACE,AAAa",
-  "names": [],
-  "sourceRoot": ""
+"version": 3,
+"mappings": ";;;;AAuBQ,kEAA0D;AAElE,cAAe;EAEb,UAAU,EAAE,gBAAgB;EAC5B,SAAS,EAAE,IAAI;EACf,cAAc,EAAE,IAAI;EACpB,WAAW,EAAE,IAAI;;AAGnB,mBAAoB;EAElB,gBAAgB,EA9BL,OAAO;EA+BlB,KAAK,EAAE,KAAK;EACZ,WAAW,EAAE,IAAI;;AAKjB,sBAAY;EAEV,SAAS,EAAE,IAAI;;AAOnB,YAAa;EACX,KAAK,EA/Ba,OAAO;;AAkC3B,OAAQ;EACN,UAAU,EAAE,MAAM;;AAGpB,KAAM;EACJ,UAAU,EAAE,IAAI;;AAGlB,MAAO;EACL,UAAU,EAAE,KAAK;;AAGnB,CAAE;EACA,WAAW,EAAE,2BAA2B",
+"sources": ["style.scss"],
+"names": [],
+"file": "style.css"
 }

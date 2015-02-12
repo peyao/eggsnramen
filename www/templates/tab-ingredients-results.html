@@ -16,13 +16,14 @@
       </div>
       
       <a class="item item-icon-left assertive left" href="">
-        <i class="icon ion-music-note"></i>
+        <i class="icon ion-flame"></i>
         Cook this now!
       </a>
 
       <!-- Debug Footer -->
       <div class="item item-divider">
-        Priority: {{ recipe.priority }}<br>
+        --DEBUG--<br>
+        Priority: {{ recipe.total_priority }}<br>
         <div ng-repeat="required in recipe.required_items">
           Required: {{ required }}
         </div>

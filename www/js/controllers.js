@@ -28,14 +28,30 @@ angular.module('starter.controllers', [])
 
 
 // Controller for 'tab-ingredients.html'
-.controller('IngredientsCtrl', function($scope, $state, $http, UserRecipeListService, $ionicPopup){
+.controller('IngredientsCtrl', 
+  function($scope, $state, $http, UserRecipeListService, $ionicPopup, $ionicLoading,
+           $timeout, $rootScope){
 
-  var recipes = [];
+  // Show loading screen
+  $ionicLoading.show({
+    delay: 50,
+    noBackdrop: true
+  });
+
+  var recipes = []; // Temporary variable holding the recipes grabbed from DB
 
   // Grab Ingredients from MongoDB
-  $http.get('/api/ingredients').success(function(data, status, headers, config){
-    $scope.ingredients = data;
-  });
+  if (typeof $rootScope.ingredients == 'undefined' ) {
+    $http.get('/api/ingredients').success(function(data, status, headers, config){
+      $rootScope.ingredients = data;
+
+      // Hide loading screen when loading is finished
+      $ionicLoading.hide();
+    });
+  }
+  else {
+    $ionicLoading.hide();
+  }
 
   // Grab Recipes from MongoDB
   $http.get('/api/recipes').success(function(data, status, headers, config){
@@ -59,6 +75,7 @@ angular.module('starter.controllers', [])
 
       UserRecipeListService.deleteSortedRecipes();
 
+      $ionicLoading.show();
       // sortRecipes returns 'true' if recipes were found
       if ( !UserRecipeListService.sortRecipes(checkedList, recipes) ) {
 
@@ -67,6 +84,7 @@ angular.module('starter.controllers', [])
           title: 'Sorry, no recipes were found with your current selection of ingredients.<br>' +
                   '<br>Please try selecting some more ingredients!'
         });
+        $ionicLoading.hide();
       }
 
       else {
@@ -79,9 +97,11 @@ angular.module('starter.controllers', [])
 })
 
 // Controller for 'tab-ingredients-results.html'
-.controller('IngredientsResultsCtrl', function($scope, $rootScope, UserRecipeListService){
+.controller('IngredientsResultsCtrl', 
+  function($scope, $rootScope, $ionicLoading, UserRecipeListService){
   
   $rootScope.recipeResults = UserRecipeListService.getSortedRecipes();
+  $ionicLoading.hide();
 });
 
 

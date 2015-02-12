@@ -78,32 +78,48 @@ servicesModule.factory('UserRecipeListService', function(){
       var recipesCopy = [];
       recipesCopy = angular.copy(recipes);
 
+      // For each ingredient in checkedArray...
       for ( i = 0; i < checkedArray.length; ++i ) {
         
+        // For each recipe in recipesCopy...
         for ( j = 0; j < recipesCopy.length; ++j ) {
           
-          //$window.alert('Checking recipe: ' + recipes[j].name);
-          
-          // Check required_items
+          // For each required_items in each recipe...
           for ( k = 0; k < recipesCopy[j].required_items.length; ++k ) {
             
             /*
-            $window.alert('Match?: ' + '"' +  
-                          recipes[j].required_items[k] + '" and "' + 
-                          checkedArr[i].name + '"');
+            console.log('Match?: ' + '"' +  
+                          recipesCopy[j].required_items[k] + '" and "' + 
+                          checkedArray[i].name + '"');
+            console.log("required_items.length of '" + recipesCopy[j].name + "': " +
+              recipesCopy[j].required_items.length);
             */
             
             if ( checkedArray[i].name === recipesCopy[j].required_items[k] ) {
 
-              //$window.alert('required_items: ' + recipes[j].required_items[k]);
-              
+              // Add keys to JSON object if they don't already exist
+              if (!recipesCopy[j].hasOwnProperty('required_priority')) {
+                recipesCopy[j].required_priority = 0;
+                recipesCopy[j].optional_priority = 0;
+                recipesCopy[j].total_priority = 0;
+
+                // How many ingredients did the user check that's also in
+                // this recipe's required_items array?
+                recipesCopy[j].user_checked_required = 0;
+              }
+
               // increment priority by 2, because it is REQUIRED
               recipesCopy[j].required_priority = recipesCopy[j].required_priority + 2;
-              //whyResultIngredientList.push(checkedArr[i].name); name will get added twice
+              recipesCopy[j].user_checked_required++;
+
+              /*
+              console.log("Increment priority of " + recipesCopy[j].name + " by 2 because of " +
+                checkedArray[i].name + " === " + recipesCopy[j].required_items[k] );
+              */
             }
           }
 
-          // Check optional_items
+          // For each optional_items in each recipe...
           for ( k = 0; k < recipesCopy[j].optional_items.length; ++k ) {
 
             if ( checkedArray[i].name === recipesCopy[j].optional_items[k] ) {
@@ -121,13 +137,14 @@ servicesModule.factory('UserRecipeListService', function(){
         recipesCopy[i].total_priority = recipesCopy[i].required_priority + 
                                         recipesCopy[i].optional_priority;
 
-        if ( recipesCopy[i].required_priority > 0 ) {
+        if ( recipesCopy[i].required_priority > 0 &&
+          recipesCopy[i].required_items.length === recipesCopy[i].user_checked_required ) {
           
           matchedRecipes.push(recipesCopy[i]);
         }
       }
 
-      console.log("matchedRecipes.length: " + matchedRecipes.length);
+      //console.log("matchedRecipes.length: " + matchedRecipes.length);
       
       // Sort the recipe list matchedRecipes based on 'priority'
       sortedRecipes = matchedRecipes.sort(sortByKey('priority'));
@@ -149,8 +166,7 @@ servicesModule.factory('UserRecipeListService', function(){
 
     deleteSortedRecipes: function(){
 
-      //delete deleteThis;
-      console.log("clearSortedRecipes is called.");
+      //console.log("clearSortedRecipes is called.");
       sortedRecipes = [];
     }
 

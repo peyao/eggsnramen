@@ -8,9 +8,6 @@ var recipeSchema = new Schema({
 	difficulty: 	Number,
 	required_items: [{ type: String }],
 	optional_items: [{ type: String }],
-	total_priority: Number,
-	required_priority: Number,
-	optional_priority: Number,
 	image: String,
 	author: String
 });
