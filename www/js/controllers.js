@@ -99,7 +99,14 @@ angular.module('starter.controllers', [])
   */
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, UserRecipeListService) {
+.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService) {
 
   console.log('RecipeCtrl');
+
+  var recipeName = $stateParams.name;
+
+  // stuff in between
+
+  $scope.state = $state.current;
+  $scope.params = $stateParams;
 });
