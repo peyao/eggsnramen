@@ -15,9 +15,12 @@
         <img ng-src="{{ recipe.image }}"
       </div>
       
-      <a class="item item-icon-left assertive left" href="">
+      <a class="item item-icon-left assertive left" 
+        ui-sref="tab.recipe({ name: '{{recipe.name}}' })">
+        
         <i class="icon ion-flame"></i>
         Cook this now!
+      
       </a>
 
       <!-- Debug Footer -->
