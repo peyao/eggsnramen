@@ -94,19 +94,19 @@ servicesModule.factory('UserRecipeListService', function(){
             console.log("required_items.length of '" + recipesCopy[j].name + "': " +
               recipesCopy[j].required_items.length);
             */
+
+            // Add keys to JSON object if they don't already exist
+            if (!recipesCopy[j].hasOwnProperty('required_priority')) {
+              recipesCopy[j].required_priority = 0;
+              recipesCopy[j].optional_priority = 0;
+              recipesCopy[j].total_priority = 0;
+
+              // How many ingredients did the user check that's also in
+              // this recipe's required_items array?
+              recipesCopy[j].user_checked_required = 0;
+            }
             
             if ( checkedArray[i].name === recipesCopy[j].required_items[k] ) {
-
-              // Add keys to JSON object if they don't already exist
-              if (!recipesCopy[j].hasOwnProperty('required_priority')) {
-                recipesCopy[j].required_priority = 0;
-                recipesCopy[j].optional_priority = 0;
-                recipesCopy[j].total_priority = 0;
-
-                // How many ingredients did the user check that's also in
-                // this recipe's required_items array?
-                recipesCopy[j].user_checked_required = 0;
-              }
 
               // increment priority by 2, because it is REQUIRED
               recipesCopy[j].required_priority = recipesCopy[j].required_priority + 2;
@@ -125,6 +125,7 @@ servicesModule.factory('UserRecipeListService', function(){
             if ( checkedArray[i].name === recipesCopy[j].optional_items[k] ) {
 
               // increment priority by 1, because it is OPTIONAL
+              console.log("Incrementing optional priority!");
               recipesCopy[j].optional_priority++;
             }
           }
@@ -136,6 +137,9 @@ servicesModule.factory('UserRecipeListService', function(){
 
         recipesCopy[i].total_priority = recipesCopy[i].required_priority + 
                                         recipesCopy[i].optional_priority;
+
+        console.log('recipesCopy[i].required_priority: ' + recipesCopy[i].required_priority);
+        console.log('recipesCopy[i].optional_priority: ' + recipesCopy[i].optional_priority);
 
         if ( recipesCopy[i].required_priority > 0 &&
           recipesCopy[i].required_items.length === recipesCopy[i].user_checked_required ) {
