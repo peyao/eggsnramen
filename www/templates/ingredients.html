@@ -1,10 +1,6 @@
 <ion-view title="Check off your ingredients!">
   <ion-content class="">    
 
-    <!--
-    <form ng-submit="addIngredients(( ingredients | filter:{selected: true} ))">
-    -->
-    
     <form ng-submit="addIngredients(( ingredients | filter:{selected: true} ))">
       <ion-checkbox class="ingredients-list" ng-repeat="ingredient in ingredients" ng-model="ingredient.selected">
         {{ ingredient.name }}

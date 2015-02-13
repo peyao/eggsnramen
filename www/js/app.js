@@ -53,7 +53,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       url: '/ingredients',
       views: {
         'tab-dash': { // View is tab-dash because it transitions from dashboard
-          templateUrl: 'templates/tab-ingredients.html',
+          templateUrl: 'templates/ingredients.html',
           controller: 'IngredientsCtrl'
         }
       }
@@ -64,8 +64,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       url: '/ingredients/results',
       views: {
         'tab-dash': { // View is tab-dash because it transitions from dashboard
-          templateUrl: 'templates/tab-ingredients-results.html',
+          templateUrl: 'templates/ingredients-results.html',
           controller: 'IngredientsResultsCtrl'
+        }
+      }
+    })
+
+    // RECIPE PAGE
+    .state('tab.recipe', {
+      url: '/ingredients/results/:name',
+      views: {
+        'tab-dash': {
+          templateURL: 'templates/recipe.html',
+          controller: 'RecipeCtrl'
         }
       }
     })
