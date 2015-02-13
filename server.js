@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://eggsnramen:iloveeggs!@ds053688.mongolab.com:53688/heroku_app33525076');
 
 // Passport (User authentication)
-var passport = required('passport');
+var passport = require('passport');
 
 // Models & Routes
 var ingredients = require('./routes/ingredients.js');
