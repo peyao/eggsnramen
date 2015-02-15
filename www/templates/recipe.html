@@ -1,7 +1,61 @@
-<ion-view title="asdf">
-  <ion-content class="padding">    
-    
-		test
+<ion-view title="Cooking: {{ recipe.name }}">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-positive icon-right ion-chevron-right" ng-click="finishedCooking()">Done</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+
+    <div class="list card">
+
+      <div class="item">
+        <h2>{{ recipe.name }}<h2>
+        <p>{{ recipe.description }}</p>
+      </div>
+
+      <div class="item item-image">
+        <img ng-src="{{ recipe.image }}">
+      </div>
+
+      <div class="row no-padding">
+
+        <!-- List of Required Ingredients -->
+        <div class="col no-padding">
+          <div class="item item-divider">
+            Required Ingredients
+          </div>
+          <div class="item item-text-wrap" ng-repeat="required in recipe.required_items">
+              {{ required }}
+          </div>
+        </div>
+
+        <!-- List of Optional Ingredients -->
+        <div class="col no-padding">
+          <div class="item item-divider">
+            Optional Ingredients
+          </div>
+          <div class="item item-text-wrap" ng-repeat="optional in recipe.optional_items">
+              {{ optional }}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="item item-divider">
+        Directions
+      </div>
+
+      <!-- List of directions -->
+      <div class="item item-text-wrap row" ng-repeat="directions in recipe.directions">
+        <div class="col col-5"> <!-- First of 2 columns, holds the number and is 5% of row width -->
+          {{ $index + 1 }}.
+        </div>
+        <div class="col"> <!-- Second column, will fill up 95% rest of row's width -->
+          {{ directions }}
+        </div>
+      </div>
+
+    </div> <!-- End 'list card' -->
 
   </ion-content>
 </ion-view>

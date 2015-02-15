@@ -33,6 +33,7 @@ servicesModule.factory('UserRecipeListService', function(){
   //var whyResultIngredientList = [];
   
   var sortedRecipes = [];
+  //var currentRecipe = {}; // Recipe obj that user selected to cook
 
   // sortByKey
   // Input  :: String matching JSON key you want to sort.
@@ -42,11 +43,12 @@ servicesModule.factory('UserRecipeListService', function(){
     
     return function(a,b) {
 
-      if( a[key] < b[key] ) {
+      if( a.key < b.key ) {
+        console.log("as");
         return 1;
       }
 
-      else if ( a[key] > b[key] ) {
+      else if ( a.key > b.key ) {
         return -1;
       }
 
@@ -72,7 +74,7 @@ servicesModule.factory('UserRecipeListService', function(){
       // we look for another recipe that has the first element of our ingredientsArr,
       // and repeat.
 
-      var matchedRecipes = [];
+      var matchedRecipes = []; // List recipes displayed in 'ingredients-results.html'
 
       // Makes a deep copy of recipes so we don't affect the original JSON file.
       var recipesCopy = [];
@@ -125,7 +127,6 @@ servicesModule.factory('UserRecipeListService', function(){
             if ( checkedArray[i].name === recipesCopy[j].optional_items[k] ) {
 
               // increment priority by 1, because it is OPTIONAL
-              console.log("Incrementing optional priority!");
               recipesCopy[j].optional_priority++;
             }
           }
@@ -138,8 +139,8 @@ servicesModule.factory('UserRecipeListService', function(){
         recipesCopy[i].total_priority = recipesCopy[i].required_priority + 
                                         recipesCopy[i].optional_priority;
 
-        console.log('recipesCopy[i].required_priority: ' + recipesCopy[i].required_priority);
-        console.log('recipesCopy[i].optional_priority: ' + recipesCopy[i].optional_priority);
+        //console.log('recipesCopy[i].required_priority: ' + recipesCopy[i].required_priority);
+        //console.log('recipesCopy[i].optional_priority: ' + recipesCopy[i].optional_priority);
 
         if ( recipesCopy[i].required_priority > 0 &&
           recipesCopy[i].required_items.length === recipesCopy[i].user_checked_required ) {
@@ -151,7 +152,7 @@ servicesModule.factory('UserRecipeListService', function(){
       //console.log("matchedRecipes.length: " + matchedRecipes.length);
       
       // Sort the recipe list matchedRecipes based on 'priority'
-      sortedRecipes = matchedRecipes.sort(sortByKey('priority'));
+      sortedRecipes = matchedRecipes;//.sort(sortByKey('priority'));
 
       // Return whether or not we have found recipes
       if (matchedRecipes.length > 0) {
@@ -171,8 +172,35 @@ servicesModule.factory('UserRecipeListService', function(){
     deleteSortedRecipes: function(){
 
       //console.log("clearSortedRecipes is called.");
-      sortedRecipes = [];
-    }
+      //sortedRecipes = [];
+    },
 
+    // Searches our recipes for one that matches the input name of the recipe,
+    // then returns the recipe JSON object
+    getSpecificRecipe: function(recipeName){
+
+      for ( i = 0; i < sortedRecipes.length; ++i ) {
+
+        if ( sortedRecipes[i].name === recipeName )
+          return sortedRecipes[i];
+      }
+
+      return false;
+    },
+
+    setCurrentRecipe: function(recipe){
+
+      currentRecipe = recipe;
+    },
+
+    getCurrentRecipe: function(){
+
+      return currentRecipe;
+    },
+
+    deleteCurrentRecipe: function(){
+
+      currentRecipe = null;
+    }
   };
 });

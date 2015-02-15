@@ -14,6 +14,11 @@
   color: white;
   font-weight: bold; }
 
+.sticky-footer {
+  padding: 0px; }
+  .sticky-footer button {
+    height: 100%; }
+
 .dash-card .card-title {
   font-size: 175%; }
 
@@ -28,6 +33,17 @@
 
 .right {
   text-align: right; }
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+  border-radius: 5px; }
+
+.no-padding {
+  padding: 0px; }
+
+.no-margin {
+  margin: 0px; }
 
 * {
   font-family: 'PT Sans Narrow' !important; }

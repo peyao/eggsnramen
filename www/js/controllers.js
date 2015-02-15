@@ -87,26 +87,39 @@ angular.module('starter.controllers', [])
 
 // Controller for 'tab-ingredients-results.html'
 .controller('IngredientsResultsCtrl', 
-  function($scope, $rootScope, $ionicLoading, UserRecipeListService){
+  function($scope, $state, $rootScope, $ionicLoading, UserRecipeListService){
   
   $scope.recipeResults = UserRecipeListService.getSortedRecipes();
   $ionicLoading.hide();
-
-  /* Select recipe function
-  $scope.selectRecipe = function(selectedRecipe){
-
-  };
-  */
 })
 
-.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService) {
+.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService){
 
-  console.log('RecipeCtrl');
+  $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
 
-  var recipeName = $stateParams.name;
+  // Sets a constant 'currentRecipe' so we can easily get recipe obj of what user is currenly using
+  //UserRecipeListService.setCurrentRecipe($scope.recipe);
 
-  // stuff in between
+  // Called when user clicks 'Done>' button on nav-bar
+  $scope.finishedCooking = function() {
 
-  $scope.state = $state.current;
-  $scope.params = $stateParams;
+    // Redirect
+    $state.go('tab.recipe-done', { name: $scope.recipe.name });
+  };
+})
+
+.controller('RecipeDoneCtrl', function($scope, $state, $stateParams, $ionicViewService, UserRecipeListService){
+
+  $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
+  console.log($scope.recipe.name);
+
+  // User is done using the 'currentRecipe', so we can clear it
+  //UserRecipeListService.deleteCurrentRecipe();
+
+  $scope.goDash = function() {
+
+    var history = $ionicViewService.getBackView();
+    $ionicViewService.goToHistoryRoot('002');
+  };
+
 });

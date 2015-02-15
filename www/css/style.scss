@@ -38,6 +38,15 @@ $color-description: #adadad;
   font-weight: bold;
 }
 
+.sticky-footer {
+
+  padding: 0px;
+
+  button {
+    height: 100%;
+  }
+}
+
 .dash-card {
   
   .card-title {
@@ -63,6 +72,20 @@ $color-description: #adadad;
 
 .right {
   text-align: right; 
+}
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.no-margin {
+  margin: 0px;
 }
 
 * {

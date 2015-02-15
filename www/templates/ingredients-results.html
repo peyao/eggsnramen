@@ -1,7 +1,7 @@
 <ion-view title="Your recipes!">
   <ion-content padding="true">
     
-    <div class="list card" ng-repeat="recipe in recipeResults">
+    <div class="list card" ng-repeat="recipe in recipeResults | orderBy:'total_priority':true">
       
       <!-- Recipe card header -->
       <div class="item item-icon-right">
@@ -12,18 +12,15 @@
       
       <!-- Recipe image -->
       <div class="item item-image">
-        <img ng-src="{{ recipe.image }}"
+        <img ng-src="{{ recipe.image }}">
       </div>
       
-      <a class="item item-icon-left assertive left" 
-        ui-sref="tab.recipe({ name: '{{recipe.name}}' })">
-        
+      <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
         <i class="icon ion-flame"></i>
         Cook this now!
-      
       </a>
 
-      <!-- Debug Footer -->
+      <!-- Debug Footer
       <div class="item item-divider">
         --DEBUG--<br>
         Priority: {{ recipe.total_priority }}<br>
@@ -33,6 +30,7 @@
         <div ng-repeat="optional in recipe.optional_items">
         Optional: {{ optional }}
       </div>
+      -->
       
     </div>
   </ion-content>

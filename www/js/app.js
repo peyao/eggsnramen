@@ -72,11 +72,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
     // RECIPE PAGE
     .state('tab.recipe', {
-      url: '/ingredients/results/:name',
+      url: '/recipe/:name',
       views: {
         'tab-dash': {
-          templateURL: 'templates/recipe.html',
+          templateUrl: 'templates/recipe.html',
           controller: 'RecipeCtrl'
+        }
+      }
+    })
+
+    // RECIPE-DONE PAGE (FINISHED COOKING)
+    .state('tab.recipe-done', {
+      url: '/recipe/:name/done',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/recipe-done.html',
+          controller: 'RecipeDoneCtrl'
         }
       }
     })
