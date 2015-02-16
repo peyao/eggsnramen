@@ -6,14 +6,37 @@ var express = require('express'),
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://eggsnramen:iloveeggs!@ds053688.mongolab.com:53688/heroku_app33525076');
 
-// Passport (User authentication)
+// Passport (User authentication) & Other Middleware
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var expressSession = require('express-session');
 var passport = require('passport');
+var authentication = require('./routes/authentication.js');
+
+// Passport Uses
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressSession({ 
+	secret: process.env.SESSION_SECRET || 'metroid prime', 
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Models & Routes
 var ingredients = require('./routes/ingredients.js');
 var recipes = require('./routes/recipes.js');
 app.use('/api', ingredients);
 app.use('/api', recipes);
+
+// Passport LOGIN
+/*
+app.post('/login',
+	passport.authenticate('local', 
+		{ successRedirect: '/asdf', failureRedirect: '/fail', failureFlash: true })
+);
+*/
 
 
 app.use(express.static('www'));
@@ -27,6 +50,19 @@ app.all('*', function(req, res, next) {
 
 // API Routes
 // app.get('/blah', routeHandler);
+app.get('/loggedin', function(req, res) {
+	res.send(req.isAuthenticated() ? req.user : '0');
+});
+
+app.post('/login', passport.authenticate('local'), function(req, res){
+	//res.send(req.user);
+	res.send(200, { message: 'loggedIn'});
+});
+
+app.post('/logout', function(req, res){
+	req.logOut();
+	res.send(200);
+});
 
 app.set('port', process.env.PORT || 5000);
 

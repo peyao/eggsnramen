@@ -1,4 +1,7 @@
 angular.module('starter.controllers', [])
+.controller('TabCtrl', function($scope, UserSessionService){
+
+})
 
 .controller('DashCtrl', function($scope) {
 })
@@ -11,7 +14,32 @@ angular.module('starter.controllers', [])
   $scope.friend = Friends.get($stateParams.friendId);
 })
 
-.controller('AccountCtrl', function($scope) {
+// User Login
+.controller('AccountCtrl', function($scope, $state, $ionicPopup, UserSessionService) {
+
+
+
+  $scope.login = function(credentials, loginRedirect){
+
+    UserSessionService.logIn(credentials.username, credentials.password, function(status){
+
+      // Callback function
+      if (status) {
+        console.log("Login Successful!");
+        $state.go('tab.dash');
+      }
+      else {
+        console.log("Login Failed!");
+        $ionicPopup.alert({
+
+          title: "We couldn't find a user with that username and password combination!<br><br>Please try again."
+        });
+      }
+    });
+
+  };
+
+  $scope.forgotPassword = function(){};
 })
 
 

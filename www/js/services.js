@@ -26,6 +26,53 @@ servicesModule.factory('Friends', function() {
   };
 });
 
+servicesModule.factory('UserSessionService', function($http){
+
+  var user = {};
+
+  return {
+
+    // OUTPUT: Runs callback with TRUE if user is logged in, FALSE otherwise
+    checkLoggedIn: function(callback) {
+      $http.get('/loggedin').
+        success(function(data, status, headers, config) {
+          if (data !== 0)
+            callback(true);
+          else
+            callback(false);
+        });
+    },
+
+    getUserName: function() {
+
+    },
+
+    // OUTPUT: Runs callback with TRUE if login succeeds, FALSE otherwise
+    logIn: function(username, password, callback) {
+      $http.post('/login', {username: username, password: password}).
+        success(function(data, status) {
+          callback(true);
+        }).
+        error(function(data, status) {
+          callback(false);
+        });
+        /*
+        then(function(res) {
+          console.log("post response: " + res.status);
+          if (res.status === 200)
+            callback(true);
+          else
+            callback(false);
+        });
+        */
+    },
+
+    logOut: function() {
+
+    }
+  };
+});
+
 // Manages the User's Recipe List
 servicesModule.factory('UserRecipeListService', function(){
 
