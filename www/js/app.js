@@ -126,6 +126,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         'tab-account': {
           templateUrl: 'templates/tab-account.html',
           controller: 'AccountCtrl'
+        },
+        'tab-account-login': {
+          templateUrl: 'templates/tab-account-login.html',
+          controller: 'AccountLoginCtrl'
         }
       }
     });

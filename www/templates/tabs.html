@@ -19,8 +19,11 @@
 
 
   <!-- Account Tab -->
-  <ion-tab title="Account" icon="icon ion-gear-b" href="#/tab/account">
-    <ion-nav-view name="tab-account"></ion-nav-view>
+  <ion-tab title="{{ tabName }}" icon="icon ion-gear-b" href="#/tab/account">
+    <!--
+    <ion-nav-view name="{{ ::accountView }}"></ion-nav-view>
+    -->
+    <dynamic-nav-view name="{{ accountView }}"></dynamic-nav-view>
   </ion-tab>
 
 

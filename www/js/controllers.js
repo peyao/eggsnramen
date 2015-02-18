@@ -1,5 +1,28 @@
 angular.module('starter.controllers', [])
-.controller('TabCtrl', function($scope, UserSessionService){
+.controller('TabCtrl', function($rootScope, $scope, UserSessionService){
+
+  // Set the $rootScope variable to check if user is logged in
+  if ( typeof $rootScope.loggedIn === 'undefined' )
+    $rootScope.loggedIn = false;
+
+  UserSessionService.checkLoggedIn(function(status){
+    $rootScope.loggedIn = status;
+  });
+
+  console.log("TabCtrl loggedIn: " + $rootScope.loggedIn);
+
+  // Redirect if we are already logged in
+  if ( $rootScope.loggedIn ) {
+    
+    $rootScope.accountView = 'tab-account';
+    $rootScope.tabName = 'Account';
+  }
+  
+  else {
+    
+    $rootScope.accountView = 'tab-account-login';
+    $rootScope.tabName = 'Login';
+  }
 
 })
 
@@ -14,10 +37,23 @@ angular.module('starter.controllers', [])
   $scope.friend = Friends.get($stateParams.friendId);
 })
 
+.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
+
+  
+
+  /*
+  // If user is not logged in, redirect them to the state 'tab.account-login'
+  if ( !$rootScope.loggedIn ) {
+    $state.go('tab.account-login');
+  }
+  */
+
+  console.log("AccountCtrl loggedIn: " + $rootScope.loggedIn);
+
+})
+
 // User Login
-.controller('AccountCtrl', function($scope, $state, $ionicPopup, UserSessionService) {
-
-
+.controller('AccountLoginCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
 
   $scope.login = function(credentials, loginRedirect){
 
@@ -26,6 +62,11 @@ angular.module('starter.controllers', [])
       // Callback function
       if (status) {
         console.log("Login Successful!");
+
+        // Maintains rootScope tab status of login
+        $rootScope.accountView = 'tab-account';
+        $rootScope.tabName = 'Account';
+
         $state.go('tab.dash');
       }
       else {
@@ -43,6 +84,9 @@ angular.module('starter.controllers', [])
 })
 
 
+.controller('AccountRegistrationCtrl', function($scope, $state, $ionicPopup, UserSessionService) {
+
+})
 
 // Controller for 'tab-ingredients.html'
 .controller('IngredientsCtrl', 
@@ -150,4 +194,15 @@ angular.module('starter.controllers', [])
     $ionicViewService.goToHistoryRoot('002');
   };
 
+})
+
+.directive('dynamicNavView', function($rootScope, $compile) {
+  return {
+    restrict: 'ECA',
+    priority: -400,
+    link: function(scope, $element, $attr, ctrl) {
+      $element.html('<ion-nav-view name="' + $rootScope.accountView + '"></ion-nav-view>');
+      $compile($element.contents())(scope);
+    }
+  };
 });
