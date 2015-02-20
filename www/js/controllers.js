@@ -98,21 +98,22 @@ angular.module('starter.controllers', [])
 
   $scope.createAccount = function() {
     console.log("Going to Create Account");
-    $rootScope.accountView = 'tab-account-registration';
     $rootScope.tabName = 'Account';
-
-    $state.go('tab.dash');
+    $state.go('tab.registration');
   };
 })
 
 
-.controller('AccountRegistrationCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
+.controller('AccountRegistrationCtrl', 
+  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, UserSessionService) {
+  
   $scope.goToLogin = function() {
-    console.log("Going to Login");
+
     $rootScope.accountView = 'tab-account-login';
     $rootScope.tabName = 'Login';
 
-    $state.go('tab.dash');
+    var backView = $ionicViewService.getBackView();
+    backView.go();
   };
 })
 

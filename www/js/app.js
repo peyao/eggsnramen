@@ -130,8 +130,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         'tab-account-login': {
           templateUrl: 'templates/tab-account-login.html',
           controller: 'AccountLoginCtrl'
-        },
-        'tab-account-registration': {
+        }
+      }
+    })
+
+    .state('tab.registration', {
+      url: '/registration',
+      views: {
+        'tab-account-login':{
           templateUrl: 'templates/tab-account-registration.html',
           controller: 'AccountRegistrationCtrl'
         }
