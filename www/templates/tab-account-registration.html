@@ -1,10 +1,10 @@
-<ion-view title="Account">
+<ion-view title="Create Account">
   <ion-content class="padding">
 
     <form name="loginForm" ng-submit="login(credentials)" novalidate>
       <div class="list list-inset">
         <div class="item item-divider">
-          Login
+          Create Account
         </div>
 
         <label class="item item-input">
@@ -14,16 +14,20 @@
         <label class="item item-input">
           <input type="password" id="password" placeholder="Password" ng-model="credentials.password"/>
         </label>
+        
+        <label class="item item-input">
+          <input type="password" id="verifyPassword" placeholder="Verify Password"/>
+        </label>
 
         <button type="submit" class="button button-block button-positive">
-          Login
+          Create Account
         </button>
       </div>
     </form>
 
     <div class="right">
-      <button class="button button-small button-dark" ng-click="forgotPassword()">
-        Forgot Password?
+      <button class="button button-small button-dark" ng-click="goToLogin()">
+        Login
       </button>
     </div>
 

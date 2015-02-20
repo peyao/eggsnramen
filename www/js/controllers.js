@@ -50,6 +50,20 @@ angular.module('starter.controllers', [])
 
   console.log("AccountCtrl loggedIn: " + $rootScope.loggedIn);
 
+  /*$scope.data = {
+    activeLevel : 1
+  };
+
+  $setLevel( function() {
+    $scope.data.activeLevel = 
+
+  });*/
+  
+  //User logout
+  $scope.logout = function(){
+
+  };
+
 })
 
 // User Login
@@ -81,11 +95,25 @@ angular.module('starter.controllers', [])
   };
 
   $scope.forgotPassword = function(){};
+
+  $scope.createAccount = function() {
+    console.log("Going to Create Account");
+    $rootScope.accountView = 'tab-account-registration';
+    $rootScope.tabName = 'Account';
+
+    $state.go('tab.dash');
+  };
 })
 
 
-.controller('AccountRegistrationCtrl', function($scope, $state, $ionicPopup, UserSessionService) {
+.controller('AccountRegistrationCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
+  $scope.goToLogin = function() {
+    console.log("Going to Login");
+    $rootScope.accountView = 'tab-account-login';
+    $rootScope.tabName = 'Login';
 
+    $state.go('tab.dash');
+  };
 })
 
 // Controller for 'tab-ingredients.html'
