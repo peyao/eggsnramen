@@ -1,4 +1,5 @@
 var User = require('../models/user.js');
+var bcrypt = require('bcrypt');
 var passport = require('passport'), 
 	LocalStrategy = require('passport-local').Strategy;
 
@@ -15,59 +16,35 @@ module.exports = passport.use(new LocalStrategy(
 				return done(null, false, { message: 'Incorrect password.' });
 			}
 			*/
-			if (user.password !== password) {
-				return done(null, false, { message: 'Incorrect password.' });
-			}
-			return done(null, user);
+
+			// Hash comparison
+			bcrypt.compare(password, user.password, function(err, res){
+
+				// Password failed...
+				if (res == false) {
+					console.log("bcrypt: Password did not match!");
+					user.err = "Incorrect password";
+					return done(err, false, { message: 'Incorrect password.' });
+				}
+
+				// Password matches!
+				console.log("bcrypt: Password matches!");
+				return done(null, user);
+			});
 		});
 	}
 ));
 
 module.exports = passport.serializeUser(function(user, done) {
-	done(null, user._id);
+	//console.log('Serializing: ' + user.username);
+	done(null, user.username);
 });
 
-module.exports = passport.deserializeUser(function(_id, done) {
+module.exports = passport.deserializeUser(function(username, done) {
 	// Query DB
-	User.findById(_id, function(err, user) {
+	User.findOne({'username': username}, function(err, user) {
+		//console.log('Deserializing: ' + user.username);
 		done(null, user);
 	});
 });
-
-/*
-// Routes
-var express = require('express');
-var router = express.Router();
-
-router.route('/users').get(function(req,res) {
-	
-	User.findOne({ 'username': 'crab' }, function(err, users) {
-		if (err) {
-			return res.send(err);
-		}
-		res.json(users);
-	});
-	passport.use(new LocalStrategy(
-		function(username, password, done) {
-			User.findOne({ 'username': username }, function(err, user) {
-				if (err) { return done(err); }
-				if (!user) {
-					return done(null, false, { message: 'Incorrect username.' });
-				}
-				if (!user.validPassword(password)) {
-					return done(null, false, { message: 'Incorrect password.' });
-				}
-				res.json(user);
-				return done(null, user);
-			});
-		}
-	));
-});
-module.exports = router;
-*/
-// End routes
-
-
-
-
 

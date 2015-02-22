@@ -16,8 +16,9 @@
         
         <!-- Your Recent Section-->
         <br>
-        <div class="dash-card">
-            <span class="card-title">Recently Used by {{ user.name }}</span>
+        <!-- ng-show directive and ng-hide class only shows Your Recent if user is logged in -->
+        <div ng-show="user.username" class="dash-card ng-hide">
+            <span class="card-title">Recently Used</span>
             <div class="row">
 
                 <!-- Your Recent 1 -->

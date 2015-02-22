@@ -1,3 +1,11 @@
+//$rootScope variables:
+//  loggedIn : bool
+//  accountView : string
+//  tabName : string
+
+// Helper functions
+//  setTabLoginStatus($rootScope) : sets the tabs to match whether user is logged in
+
 angular.module('starter.controllers', [])
 .controller('TabCtrl', function($rootScope, $scope, UserSessionService){
 
@@ -5,28 +13,31 @@ angular.module('starter.controllers', [])
   if ( typeof $rootScope.loggedIn === 'undefined' )
     $rootScope.loggedIn = false;
 
-  UserSessionService.checkLoggedIn(function(status){
-    $rootScope.loggedIn = status;
+  UserSessionService.checkLoggedIn(function(data){
+    if (typeof data !== 'undefined')
+      $rootScope.loggedIn = status;
   });
 
   console.log("TabCtrl loggedIn: " + $rootScope.loggedIn);
 
-  // Redirect if we are already logged in
-  if ( $rootScope.loggedIn ) {
-    
-    $rootScope.accountView = 'tab-account';
-    $rootScope.tabName = 'Account';
-  }
-  
-  else {
-    
-    $rootScope.accountView = 'tab-account-login';
-    $rootScope.tabName = 'Login';
-  }
-
+  setTabLoginStatus($rootScope);
 })
 
-.controller('DashCtrl', function($scope) {
+
+
+.controller('DashCtrl', function($scope, $rootScope, UserSessionService) {
+
+  UserSessionService.checkLoggedIn(function(user) {
+
+    if (user !== null) {
+      console.log('Dash: User has a session.');
+
+      $scope.user = user;
+      $scope.loggedIn = true;
+      $rootScope.loggedIn = true;
+      setTabLoginStatus($rootScope);
+    }
+  });
 })
 
 .controller('FriendsCtrl', function($scope, Friends) {
@@ -37,42 +48,33 @@ angular.module('starter.controllers', [])
   $scope.friend = Friends.get($stateParams.friendId);
 })
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService) {
 
-  
-
-  /*
-  // If user is not logged in, redirect them to the state 'tab.account-login'
-  if ( !$rootScope.loggedIn ) {
-    $state.go('tab.account-login');
-  }
-  */
-
-  console.log("AccountCtrl loggedIn: " + $rootScope.loggedIn);
-
-  /*$scope.data = {
-    activeLevel : 1
-  };
-
-  $setLevel( function() {
-    $scope.data.activeLevel = 
-
-  });*/
+  // Sets the username on the account page, left of the Edit button
+  $scope.user = UserSessionService.getUserObject();
+  //$scope.user.name = UserSessionService.getUserName();
   
   //User logout
-  $scope.logout = function(){
-
+  $scope.logOut = function(){
+    UserSessionService.logOut(function(status) {
+      if (status) {
+        console.log("Logout successful.");
+        //$state.go('tab.dash', {}, {reload: true});
+        $window.location.replace("/");
+      }
+      else {
+        console.log("Logout failed.");
+      }
+    });
   };
 
 })
 
 // User Login
-.controller('AccountLoginCtrl', function($rootScope, $scope, $state, $ionicPopup, UserSessionService) {
+.controller('AccountLoginCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService) {
 
-  $scope.login = function(credentials, loginRedirect){
-
+  $scope.login = function(credentials){
     UserSessionService.logIn(credentials.username, credentials.password, function(status){
-
       // Callback function
       if (status) {
         console.log("Login Successful!");
@@ -81,7 +83,8 @@ angular.module('starter.controllers', [])
         $rootScope.accountView = 'tab-account';
         $rootScope.tabName = 'Account';
 
-        $state.go('tab.dash');
+        //$state.go('tab.dash');
+        $window.location.replace("/");
       }
       else {
         console.log("Login Failed!");
@@ -91,22 +94,49 @@ angular.module('starter.controllers', [])
         });
       }
     });
-
   };
 
   $scope.forgotPassword = function(){};
 
   $scope.createAccount = function() {
-    console.log("Going to Create Account");
-    $rootScope.tabName = 'Account';
     $state.go('tab.registration');
   };
 })
 
 
 .controller('AccountRegistrationCtrl', 
-  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, UserSessionService) {
+  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, $window, UserSessionService) {
   
+  $scope.register = function(credentials, registerRedirect) {
+
+    //console.log('cookingLevel selected: ' + credentials.cookingLevel);
+
+    if ( credentials.password === credentials.verifyPassword )
+      UserSessionService.register(credentials.username, credentials.email, credentials.password, credentials.cookingLevel, function(user){
+        // Callback
+        if (typeof user.err === 'undefined') {
+
+          UserSessionService.logIn(credentials.username, credentials.password, function(status){
+            var alertPopup = $ionicPopup.alert({
+              title: "Registration successful!<br><br>You can change your cooking level any time in your Account settings."
+            });
+
+            alertPopup.then(function(res) {
+
+              $window.location.replace("/");
+            });
+          });
+        }
+
+        else {
+          $ionicPopup.alert({
+            title: user.err
+          });
+        }
+      });
+  };
+
+  // For the login button on this page only.
   $scope.goToLogin = function() {
 
     $rootScope.accountView = 'tab-account-login';
@@ -235,3 +265,23 @@ angular.module('starter.controllers', [])
     }
   };
 });
+
+//HELPER FUNCTIONS
+var setTabLoginStatus = function($rootScope) {
+  if ( $rootScope.loggedIn ) {
+    
+    $rootScope.accountView = 'tab-account';
+    $rootScope.tabName = 'Account';
+  }
+  
+  else {
+    
+    $rootScope.accountView = 'tab-account-login';
+    $rootScope.tabName = 'Login';
+  }
+};
+
+var loginCallback = function(status) {
+
+  
+};

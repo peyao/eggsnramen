@@ -7,11 +7,13 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://eggsnramen:iloveeggs!@ds053688.mongolab.com:53688/heroku_app33525076');
 
 // Passport (User authentication) & Other Middleware
+var bcrypt = require('bcrypt');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressSession = require('express-session');
 var passport = require('passport');
 var authentication = require('./routes/authentication.js');
+var registration = require('./routes/registration.js');
 
 // Passport Uses
 app.use(cookieParser());
@@ -30,15 +32,6 @@ var recipes = require('./routes/recipes.js');
 app.use('/api', ingredients);
 app.use('/api', recipes);
 
-// Passport LOGIN
-/*
-app.post('/login',
-	passport.authenticate('local', 
-		{ successRedirect: '/asdf', failureRedirect: '/fail', failureFlash: true })
-);
-*/
-
-
 app.use(express.static('www'));
 
 // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
@@ -55,13 +48,22 @@ app.get('/loggedin', function(req, res) {
 });
 
 app.post('/login', passport.authenticate('local'), function(req, res){
-	//res.send(req.user);
-	res.send(200, { message: 'loggedIn'});
+	if (typeof req.user !== 'undefined')
+		res.send(req.user);	
+	else
+		res.send(401);
 });
 
 app.post('/logout', function(req, res){
 	req.logOut();
 	res.send(200);
+});
+
+app.post('/register', function(req, res){
+	console.log('req.body.username: ' + req.body.username );
+	registration.register(req.body.username, req.body.email, req.body.password, req.body.cookingLevel, function(user){
+		res.send(user);
+	});
 });
 
 app.set('port', process.env.PORT || 5000);

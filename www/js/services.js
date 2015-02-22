@@ -32,25 +32,38 @@ servicesModule.factory('UserSessionService', function($http){
 
   return {
 
-    // OUTPUT: Runs callback with TRUE if user is logged in, FALSE otherwise
+    // OUTPUT: Runs callback with user data if user is logged in, NULL otherwise
     checkLoggedIn: function(callback) {
       $http.get('/loggedin').
         success(function(data, status, headers, config) {
-          if (data !== 0)
-            callback(true);
-          else
-            callback(false);
+          if (typeof data.username !== 'undefined') {
+            console.log ("data.username: " + data.username);
+            user = data;
+            callback(data);
+          }
+          else {
+            callback(null);
+          }
         });
     },
 
     getUserName: function() {
+      return user.username;
+    },
 
+    getUserLevel: function() {
+      return user.level;
+    },
+
+    getUserObject: function() {
+      return user;
     },
 
     // OUTPUT: Runs callback with TRUE if login succeeds, FALSE otherwise
     logIn: function(username, password, callback) {
       $http.post('/login', {username: username, password: password}).
         success(function(data, status) {
+          user = data; // Set our local variable
           callback(true);
         }).
         error(function(data, status) {
@@ -67,8 +80,18 @@ servicesModule.factory('UserSessionService', function($http){
         */
     },
 
-    logOut: function() {
+    logOut: function(callback) {
+      $http.post('/logout').
+        success(function(status) {
+          callback(true);
+        });
+    },
 
+    register: function(username, email, password, cookingLevel, callback) {
+      $http.post('/register', {username: username, email: email, password: password, cookingLevel: cookingLevel}).
+        success(function(data, status) {
+          callback(data);
+        });
     }
   };
 });

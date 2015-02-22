@@ -1,22 +1,39 @@
 <ion-view title="Create Account">
   <ion-content class="padding">
 
-    <form name="loginForm" ng-submit="login(credentials)" novalidate>
+    <form name="registrationForm" ng-submit="register(credentials)" novalidate>
       <div class="list list-inset">
         <div class="item item-divider">
           Create Account
         </div>
 
         <label class="item item-input">
-          <input type="text" id="username" placeholder="Username" ng-model="credentials.username"/>
+          <input type="text" name="username" placeholder="Username" ng-model="credentials.username"/>
         </label>
 
         <label class="item item-input">
-          <input type="password" id="password" placeholder="Password" ng-model="credentials.password"/>
+          <input type="text" name="email" placeholder="Email" ng-model="credentials.email"/>
+        </label>
+
+        <label class="item item-input">
+          <input type="password" name="password" placeholder="Password" ng-model="credentials.password"/>
         </label>
         
         <label class="item item-input">
-          <input type="password" id="verifyPassword" placeholder="Verify Password"/>
+          <input type="password" name="verifyPassword" placeholder="Verify Password" ng-model="credentials.verifyPassword"/>
+        </label>
+
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Cooking Level
+          </div>
+          <select name="cookingLevel" 
+              ng-model="credentials.cookingLevel"
+              ng-init="credentials.cookingLevel = 0">
+            <option value="0" selected>Beginner</option>
+            <option value="1">Intermediate</option>
+            <option value="2">Advanced</option>
+          </select>
         </label>
 
         <button type="submit" class="button button-block button-positive">
@@ -25,9 +42,10 @@
       </div>
     </form>
 
+    
     <div class="right">
-      <button class="button button-small button-dark" ng-click="goToLogin()">
-        Login
+      <button class="button button-small button-positive button-clear" ng-click="goToLogin()">
+        Back to login
       </button>
     </div>
 
