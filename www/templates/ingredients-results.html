@@ -5,19 +5,20 @@
       <div class="col col-50" ng-repeat="recipe in recipeResults | orderBy:'total_priority':true">
         
         <!-- Recipe card header -->
-        <div class="item">
+        <a class="item item-icon-right assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
+          <i class="icon ion-leaf balanced"></i>
           <h2>{{ recipe.name }}</h2>
-        </div>
+        </a>
         
         <!-- Recipe image -->
-        <div class="item item-image">
+        <a class="item item-image" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
           <img ng-src="{{ recipe.image }}">
-        </div>
+        </a>
         
-        <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
+        <!--<a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
           <i class="icon ion-leaf balanced"></i>
           Cook Now!
-        </a>
+        </a>-->
 
         <!-- Debug Footer
         <div class="item item-divider">
