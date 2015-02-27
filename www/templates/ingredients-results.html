@@ -1,37 +1,37 @@
 <ion-view title="Your recipes!">
   <ion-content padding="true">
     
-    <div class="list card" ng-repeat="recipe in recipeResults | orderBy:'total_priority':true">
-      
-      <!-- Recipe card header -->
-      <div class="item item-icon-right">
-        <i class="icon ion-leaf balanced"></i>
-        <h2>{{ recipe.name }}</h2>
-        <p>{{ recipe.description }}</p>
-      </div>
-      
-      <!-- Recipe image -->
-      <div class="item item-image">
-        <img ng-src="{{ recipe.image }}">
-      </div>
-      
-      <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
-        <i class="icon ion-flame"></i>
-        Cook this now!
-      </a>
-
-      <!-- Debug Footer
-      <div class="item item-divider">
-        --DEBUG--<br>
-        Priority: {{ recipe.total_priority }}<br>
-        <div ng-repeat="required in recipe.required_items">
-          Required: {{ required }}
+    <div class="row">
+      <div class="col col-50" ng-repeat="recipe in recipeResults | orderBy:'total_priority':true">
+        
+        <!-- Recipe card header -->
+        <div class="item">
+          <h2>{{ recipe.name }}</h2>
         </div>
-        <div ng-repeat="optional in recipe.optional_items">
-        Optional: {{ optional }}
+        
+        <!-- Recipe image -->
+        <div class="item item-image">
+          <img ng-src="{{ recipe.image }}">
+        </div>
+        
+        <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
+          <i class="icon ion-leaf balanced"></i>
+          Cook Now!
+        </a>
+
+        <!-- Debug Footer
+        <div class="item item-divider">
+          --DEBUG--<br>
+          Priority: {{ recipe.total_priority }}<br>
+          <div ng-repeat="required in recipe.required_items">
+            Required: {{ required }}
+          </div>
+          <div ng-repeat="optional in recipe.optional_items">
+          Optional: {{ optional }}
+        </div>
+        -->
+        
       </div>
-      -->
-      
     </div>
   </ion-content>
 </ion-view>

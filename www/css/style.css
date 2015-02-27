@@ -71,3 +71,7 @@ label.item.valid-lr {
   color: red; }
 
 /*# sourceMappingURL=style.css.map */
+
+.row{
+  flex-wrap: wrap;
+}
