@@ -1,12 +1,25 @@
-<ion-view title="You're amazing!">
+<ion-view title="Good job!">
 
   <ion-nav-buttons side="right">
     <button class="button button-clear button-positive icon-right ion-chevron-right" ng-click="goDash()">Dashboard</button>
   </ion-nav-buttons>
 
   <ion-content>
-  	Edit this page at 'templates/recipe-done.html'.
+   	<div class="card">
+  		<div class="item item-divider">
+        	<h2>Congratulations!</h2>
+        	<p>You finished cooking {{recipe.name}}.</p>
+      	</div>
+      
+      	<!-- Recipe image -->
+      	<div class="item item-image">
+        	<img ng-src="{{ recipe.image }}">
+      	</div>
+    </div>
+      	
+    <button class="button button-block button-balanced">
+    	Save this Recipe
+    </button>
 
-  	{{ recipe.name }}
   </ion-content>
 </ion-view>
