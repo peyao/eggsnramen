@@ -239,7 +239,10 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('RecipeDoneCtrl', function($scope, $state, $stateParams, $ionicViewService, UserRecipeListService){
+.controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
+    $ionicViewService, UserRecipeListService, $analytics){
+
+  $analytics.pageTrack();
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
   console.log($scope.recipe.name);
