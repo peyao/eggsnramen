@@ -105,7 +105,13 @@ angular.module('starter.controllers', [])
 
 
 .controller('AccountRegistrationCtrl', 
-  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, $window, UserSessionService) {
+  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, 
+    $window, $location, UserSessionService) {
+
+  // Analytics
+  $scope.$on('$viewContentLoaded', function(event){
+    $window.ga('send', 'pageview', { page: $location.url() });
+  });
   
   $scope.register = function(credentials, registerRedirect) {
 
@@ -224,7 +230,13 @@ angular.module('starter.controllers', [])
   $ionicLoading.hide();
 })
 
-.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService){
+.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService,
+    $window, $location){
+
+  // Analytics
+  $scope.$on('$viewContentLoaded', function(event){
+    $window.ga('send', 'pageview', { page: $location.url() });
+  });
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
 
@@ -240,9 +252,12 @@ angular.module('starter.controllers', [])
 })
 
 .controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
-    $ionicViewService, UserRecipeListService, $analytics){
+    $ionicViewService, $window, $location, UserRecipeListService){
 
-  $analytics.pageTrack();
+  // Analytics
+  $scope.$on('$viewContentLoaded', function(event){
+    $window.ga('send', 'pageview', { page: $location.url() });
+  });
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
   console.log($scope.recipe.name);
