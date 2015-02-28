@@ -25,7 +25,9 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('DashCtrl', function($scope, $rootScope, UserSessionService) {
+.controller('DashCtrl', function($scope, $rootScope, UserSessionService, Analytics) {
+
+  Analytics.trackPage('dashboard');
 
   UserSessionService.checkLoggedIn(function(user) {
 
@@ -40,15 +42,23 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FriendsCtrl', function($scope, Friends) {
+.controller('FriendsCtrl', function($scope, Friends, Analytics) {
+  
+  Analytics.trackPage('friends');
+
   $scope.friends = Friends.all();
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
+.controller('FriendDetailCtrl', function($scope, $stateParams, Friends, Analytics) {
+  
+  Analytics.trackPage('friend-detail');
+
   $scope.friend = Friends.get($stateParams.friendId);
 })
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService, Analytics) {
+
+  Analytics.trackPage('account');
 
   // Sets the username on the account page, left of the Edit button
   $scope.user = UserSessionService.getUserObject();
@@ -71,7 +81,9 @@ angular.module('starter.controllers', [])
 })
 
 // User Login
-.controller('AccountLoginCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService) {
+.controller('AccountLoginCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService, Analytics) {
+
+  Analytics.trackPage('login');
 
   $scope.login = function(credentials){
     UserSessionService.logIn(credentials.username, credentials.password, function(status){
@@ -105,13 +117,9 @@ angular.module('starter.controllers', [])
 
 
 .controller('AccountRegistrationCtrl', 
-  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, 
-    $window, $location, UserSessionService) {
+  function($rootScope, $scope, $state, $ionicPopup, $ionicViewService, $window, UserSessionService, Analytics) {
 
-  // Analytics
-  $scope.$on('$viewContentLoaded', function(event){
-    $window.ga('send', 'pageview', { page: $location.url() });
-  });
+    Analytics.trackPage('registration');
   
   $scope.register = function(credentials, registerRedirect) {
 
@@ -156,7 +164,9 @@ angular.module('starter.controllers', [])
 // Controller for 'tab-ingredients.html'
 .controller('IngredientsCtrl', 
   function($scope, $state, $http, UserRecipeListService, $ionicPopup, $ionicLoading,
-           $timeout, $rootScope){
+           $timeout, $rootScope, Analytics){
+
+  Analytics.trackPage('ingredients-checkboxes');
 
   // Show loading screen
   $ionicLoading.show({
@@ -224,21 +234,19 @@ angular.module('starter.controllers', [])
 
 // Controller for 'tab-ingredients-results.html'
 .controller('IngredientsResultsCtrl', 
-  function($scope, $state, $rootScope, $ionicLoading, UserRecipeListService){
+  function($scope, $state, $rootScope, $ionicLoading, UserRecipeListService, Analytics){
+
+  Analytics.trackPage('ingredients-results');
   
   $scope.recipeResults = UserRecipeListService.getSortedRecipes();
   $ionicLoading.hide();
 })
 
-.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService,
-    $window, $location){
-
-  // Analytics
-  $scope.$on('$viewContentLoaded', function(event){
-    $window.ga('send', 'pageview', { page: $location.url() });
-  });
+.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService, Analytics){
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
+
+  Analytics.trackPage('Recipe Page (' + $scope.recipe.name + ")");
 
   // Sets a constant 'currentRecipe' so we can easily get recipe obj of what user is currenly using
   //UserRecipeListService.setCurrentRecipe($scope.recipe);
@@ -252,15 +260,14 @@ angular.module('starter.controllers', [])
 })
 
 .controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
-    $ionicViewService, $window, $location, UserRecipeListService){
+    $ionicViewService, UserRecipeListService, Analytics){
 
-  // Analytics
-  $scope.$on('$viewContentLoaded', function(event){
-    $window.ga('send', 'pageview', { page: $location.url() });
-  });
+  Analytics.trackPage('finished-cooking');
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
-  console.log($scope.recipe.name);
+
+  //Google Analytics
+  Analytics.trackEvent('Finished cooking @ MAIN.', $scope.recipe.name);
 
   // User is done using the 'currentRecipe', so we can clear it
   //UserRecipeListService.deleteCurrentRecipe();

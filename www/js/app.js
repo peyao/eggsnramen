@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'angular-google-analytics'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -21,7 +21,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
-.config(function($httpProvider, $stateProvider, $urlRouterProvider) {
+.config(function($httpProvider, $stateProvider, $urlRouterProvider, AnalyticsProvider) {
+
+  // Analytics
+  AnalyticsProvider.setAccount('UA-60212236-1');
+  AnalyticsProvider.trackPages(true);
+  AnalyticsProvider.trackUrlParams(true);
+  AnalyticsProvider.useDisplayFeatures(true);
+  AnalyticsProvider.useAnalytics(true);
+  AnalyticsProvider.useEnhancedLinkAttribution(true);
+
 
   $httpProvider.defaults.transformRequest = function (data) {
     if ( data === undefined ) {
@@ -147,4 +156,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
 
+})
+
+.run(function(Analytics) {
+  // In case you are relying on automatic page tracking, you need to inject Analytics
+  // at least once in your application (for example in the main run() block)
 });
