@@ -3,12 +3,13 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
 
-	//_id: 		Schema.ObjectId,
-	username:	String,
+	username:	{ type: String, required: true, unique: true },
 	email: 		String,
 	password: 	String,
 	image: 		String,
-	level: 		String 
+	level: 		String,
+	friends: 		[{ type: String }],
+	recipe_history: [{ type: String }]
 });
 
 module.exports = mongoose.model('User', userSchema);

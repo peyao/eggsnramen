@@ -13,7 +13,8 @@ var bodyParser = require('body-parser');
 var expressSession = require('express-session');
 var passport = require('passport');
 var authentication = require('./routes/authentication.js');
-var registration = require('./routes/registration.js');
+var userActions = require('./routes/user.js');
+var friend = require('./routes/friend.js');
 
 // Passport Uses
 app.use(cookieParser());
@@ -43,27 +44,45 @@ app.all('*', function(req, res, next) {
 
 // API Routes
 // app.get('/blah', routeHandler);
-app.get('/loggedin', function(req, res) {
+app.get('/api/user/loggedin', function(req, res) {
 	res.send(req.isAuthenticated() ? req.user : '0');
 });
 
-app.post('/login', passport.authenticate('local'), function(req, res){
+app.post('/api/user/login', passport.authenticate('local'), function(req, res){
 	if (typeof req.user !== 'undefined')
 		res.send(req.user);	
 	else
 		res.send(401);
 });
 
-app.post('/logout', function(req, res){
+app.post('/api/user/logout', function(req, res){
 	req.logOut();
 	res.send(200);
 });
 
-app.post('/register', function(req, res){
-	console.log('req.body.username: ' + req.body.username );
-	registration.register(req.body.username, req.body.email, req.body.password, req.body.cookingLevel, function(user){
+app.post('/api/user/register', function(req, res){
+	userActions.register(req.body.username, req.body.email, req.body.password, req.body.cookingLevel, function(user){
 		res.send(user);
 	});
+});
+
+app.get('/api/user/searchlist', function(req, res){
+
+	console.log('GET @ /api/userlist; Returning a list of users...');
+
+	// Check if user is logged in first.
+	if ( req.isAuthenticated() ) {
+		friend.getUserList(function(user){
+			//res.send(user);
+			console.log("Users: %j", user);
+		});
+	}
+	else
+		res.send(401); // Unauthorized
+});
+
+app.post('/api/update/user/recipe-history', function() {
+
 });
 
 app.set('port', process.env.PORT || 5000);

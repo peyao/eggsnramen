@@ -128,6 +128,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
+    .state('tab.add-friend', {
+      url: '/addfriend',
+      views: {
+        'tab-friends': {
+          templateUrl: 'templates/add-friend.html',
+          controller: 'AddFriendCtrl'
+        }
+      }
+    })
 
     .state('tab.account', {
       url: '/account',

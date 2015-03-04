@@ -4,24 +4,27 @@ var servicesModule = angular.module('starter.services', []);
  * A simple example service that returns some data.
  */
 
-servicesModule.factory('Friends', function() {
+servicesModule.factory('FriendsService', function() {
   // Might use a resource here that returns a JSON array
 
-  // Some fake testing data
-  var friends = [
-    { id: 0, name: 'Scruff McGruff' },
-    { id: 1, name: 'G.I. Joe' },
-    { id: 2, name: 'Miss Frizzle' },
-    { id: 3, name: 'Ash Ketchum' }
-  ];
+  var friends = {};
 
   return {
-    all: function() {
+    
+    // Need to pass in User object and simply get the JSON array.
+    getFriends: function() {
       return friends;
     },
-    get: function(friendId) {
-      // Simple index lookup
-      return friends[friendId];
+    
+    getSearchList: function(callback) {
+      $http.get('/api/user/searchlist').
+        success(function(data, status) {
+          callback(data);
+        });
+    },
+
+    getSpecificFriend: function(friendUsername) {
+
     }
   };
 });
@@ -34,7 +37,7 @@ servicesModule.factory('UserSessionService', function($http){
 
     // OUTPUT: Runs callback with user data if user is logged in, NULL otherwise
     checkLoggedIn: function(callback) {
-      $http.get('/loggedin').
+      $http.get('/api/user/loggedin').
         success(function(data, status, headers, config) {
           if (typeof data.username !== 'undefined') {
             console.log ("data.username: " + data.username);
@@ -61,7 +64,7 @@ servicesModule.factory('UserSessionService', function($http){
 
     // OUTPUT: Runs callback with TRUE if login succeeds, FALSE otherwise
     logIn: function(username, password, callback) {
-      $http.post('/login', {username: username, password: password}).
+      $http.post('/api/user/login', {username: username, password: password}).
         success(function(data, status) {
           user = data; // Set our local variable
           callback(true);
@@ -81,14 +84,14 @@ servicesModule.factory('UserSessionService', function($http){
     },
 
     logOut: function(callback) {
-      $http.post('/logout').
+      $http.post('/api/user/logout').
         success(function(status) {
           callback(true);
         });
     },
 
     register: function(username, email, password, cookingLevel, callback) {
-      $http.post('/register', {username: username, email: email, password: password, cookingLevel: cookingLevel}).
+      $http.post('/api/user/register', {username: username, email: email, password: password, cookingLevel: cookingLevel}).
         success(function(data, status) {
           callback(data);
         });
@@ -114,7 +117,6 @@ servicesModule.factory('UserRecipeListService', function(){
     return function(a,b) {
 
       if( a.key < b.key ) {
-        console.log("as");
         return 1;
       }
 

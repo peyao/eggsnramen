@@ -42,18 +42,24 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FriendsCtrl', function($scope, Friends, Analytics) {
+.controller('FriendsCtrl', function($scope, FriendsService, Analytics) {
   
   Analytics.trackPage('friends');
 
-  $scope.friends = Friends.all();
+  $scope.friends = FriendsService.getFriends();
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends, Analytics) {
+.controller('FriendDetailCtrl', function($scope, $stateParams, FriendsService, Analytics) {
   
   Analytics.trackPage('friend-detail');
 
   $scope.friend = Friends.get($stateParams.friendId);
+})
+
+.controller('AddFriendCtrl', function($scope, $stateParams, FriendsService, Analytics) {
+
+  Analytics.trackPage('add-friend');
+
 })
 
 .controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService, Analytics) {
