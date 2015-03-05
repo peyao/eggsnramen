@@ -14,6 +14,7 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var authentication = require('./routes/authentication.js');
 var userActions = require('./routes/user.js');
+var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME || 'app33525076@heroku.com', process.env.SENDGRID_PASSWORD || 'lijpylyv');
 
 // Passport Uses
 app.use(cookieParser());
@@ -87,12 +88,22 @@ app.post('/api/update/user/recipe-history', function(req, res) {
 app.get('/api/image/:image', function(req, res) {
 
   res.sendfile('assets/user_profile_images/' + req.params.image);
-  /*
-  userActions.getImagePath(req.params.username, function(imagepath){
-    console.log("Sending image: " + imagepath);
-    res.sendfile(imagepath);
+});
+
+app.get('/api/user/forgotpassword/:email', function(req, res) {
+
+  sendgrid.send({
+    to:       req.params.email,
+    from:     'crew@eggsnramen.com',
+    subject:  'eggsnramen Password Reset Link',
+    text:     'Link to password reset.'
+  }, function(err,json) {
+    if (err) {
+      return console.err(err);
+    }
+    console.log(json);
   });
-*/
+  
 });
 
 app.set('port', process.env.PORT || 5000);
