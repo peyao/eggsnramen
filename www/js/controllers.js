@@ -265,7 +265,7 @@ angular.module('starter.controllers', [])
 .controller('IngredientsResultsCtrl', 
   function($scope, $state, $rootScope, $ionicLoading, UserRecipeListService, Analytics){
 
-  Analytics.trackPage('ingredients-results');
+  Analytics.trackPage('ingredients-results-type-b');
   
   $scope.recipeResults = UserRecipeListService.getSortedRecipes();
   $ionicLoading.hide();
@@ -291,7 +291,7 @@ angular.module('starter.controllers', [])
 .controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
     $ionicViewService, UserRecipeListService, Analytics){
 
-  Analytics.trackPage('finished-cooking-type-B');
+  Analytics.trackPage('finished-cooking');
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
 
