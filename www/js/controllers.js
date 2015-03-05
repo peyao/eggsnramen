@@ -42,24 +42,47 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FriendsCtrl', function($scope, FriendsService, Analytics) {
+.controller('FollowCtrl', function($scope, FollowService, Analytics, $ionicLoading, $ionicPopup, $state) {
   
-  Analytics.trackPage('friends');
+  Analytics.trackPage('follow');
 
-  $scope.friends = FriendsService.getFriends();
+  $scope.data = { 'users': [], 'search': '' };
+
+  $ionicLoading.show({
+    delay: 50,
+    noBackdrop: true
+  });
+
+  $scope.followers = FollowService.getFollowers();
+  $scope.following = FollowService.getFollowing();
+
+  FollowService.getUserList(function(userList) {
+    $ionicLoading.hide();
+
+    console.log('userList[0].username: ' + userList[0].username);
+
+    if(typeof userList[0].username === 'undefined') {
+      $ionicPopup.alert({
+        title: "Please login first!"
+      });
+      $state.go('tab.dash');
+    }
+  });
+
+  $scope.search = function () {
+
+    FollowService.searchList($scope.data.search)
+      .then(function(matches) {
+        $scope.data.users = matches;
+      });
+  };
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, FriendsService, Analytics) {
+.controller('UserDetailCtrl', function($scope, $stateParams, FollowService, Analytics) {
   
-  Analytics.trackPage('friend-detail');
+  Analytics.trackPage('user-detail');
 
-  $scope.friend = Friends.get($stateParams.friendId);
-})
-
-.controller('AddFriendCtrl', function($scope, $stateParams, FriendsService, Analytics) {
-
-  Analytics.trackPage('add-friend');
-
+  $scope.otherUser = FollowService.get($stateParams.userName);
 })
 
 .controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService, Analytics) {

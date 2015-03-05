@@ -4,12 +4,13 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
 
 	username:	{ type: String, required: true, unique: true },
-	email: 		String,
-	password: 	String,
-	image: 		String,
-	level: 		String,
-	friends: 		[{ type: String }],
-	recipe_history: [{ type: String }]
+	email: 		{ type: String, required: true },
+	password: 	{ type: String, required: true },
+	image: 		{ type: String, required: true },
+	level: 		{ type: String, required: true},
+	recipe_history: [{ type: String }],
+	followers: 		[{ type: String }],
+	following: 		[{ type: String }]
 });
 
 module.exports = mongoose.model('User', userSchema);

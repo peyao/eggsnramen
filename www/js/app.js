@@ -110,33 +110,35 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
 
-    .state('tab.friends', {
-      url: '/friends',
+    .state('tab.follow', {
+      url: '/follow',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
+        'tab-follow': {
+          templateUrl: 'templates/tab-follow.html',
+          controller: 'FollowCtrl'
         }
       }
     })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
+    .state('tab.user-detail', {
+      url: '/user/:userName',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
+        'tab-follow': {
+          templateUrl: 'templates/user-detail.html',
+          controller: 'UserDetailCtrl'
         }
       }
     })
-    .state('tab.add-friend', {
-      url: '/addfriend',
+    /*
+    .state('tab.follow', {
+      url: '/addfollower',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/add-friend.html',
-          controller: 'AddFriendCtrl'
+        'tab-follow': {
+          templateUrl: 'templates/follow.html',
+          controller: 'FollowerCtrl'
         }
       }
     })
+    */
 
     .state('tab.account', {
       url: '/account',

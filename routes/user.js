@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt');
 var User = require('../models/user.js');
+var DEFAULT_IMAGE = "user_default.png";
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
 						// Insert into DB here
 						console.log('password hashed: ' + hash);
 						
-						var newUser = new User({ username: username, email: email, password: hash, level: cookingLevel });
+						var newUser = new User({ username: username, email: email, password: hash, level: cookingLevel, image: DEFAULT_IMAGE });
 
 						newUser.save(function(err, savedUser) {
 							if (!err) {
@@ -50,5 +51,22 @@ module.exports = {
 				console.log("updateRecipeHistory - err: " + err);
 			}
 		);
-	}
+	},
+
+	getUserList: function (callback) {
+
+		User.find({}, 'username email image', function(err, user) {
+			
+			callback(user);
+		});
+	},
+
+  getImagePath: function (username, callback) {
+    User.findOne({ 'username': username }, function(err, user) {
+
+      if (err)
+        console.log("getImagePath err: " + err);
+      return user.image;
+    });
+  }
 };

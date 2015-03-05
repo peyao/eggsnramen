@@ -4,28 +4,69 @@ var servicesModule = angular.module('starter.services', []);
  * A simple example service that returns some data.
  */
 
-servicesModule.factory('FriendsService', function() {
+servicesModule.factory('FollowService', function($http, $q, $timeout) {
   // Might use a resource here that returns a JSON array
 
-  var friends = {};
+  var followers = {};
+  var following = {};
+  var userList = {};
 
   return {
     
     // Need to pass in User object and simply get the JSON array.
-    getFriends: function() {
-      return friends;
+    // TODO
+    getFollowers: function() {
+      return followers;
+    },
+
+    //TODO
+    getFollowing: function() {
+      return following;
     },
     
-    getSearchList: function(callback) {
+    getUserList: function(callback) {
       $http.get('/api/user/searchlist').
         success(function(data, status) {
+
+          // Sort usernames
+          userList = data.sort(function(a,b) {
+
+            var userA = a.username.toLowerCase();
+            var userB = b.username.toLowerCase();
+
+            if (userA > userB) return 1;
+            if (userA < userB) return -1;
+            return 0;
+          });
+
+          callback(userList);
+        }).
+        error(function(data, status) {
           callback(data);
         });
     },
 
+    // TODO
     getSpecificFriend: function(friendUsername) {
 
-    }
+    },
+
+    searchList: function(searchFilter) {
+      var deferred = $q.defer();
+
+      var matches = userList.filter(function(userResult) {
+        if (userResult.username.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1) {
+          return true;
+        }
+      });
+
+      $timeout(function() {
+        deferred.resolve(matches);
+      }, 100);
+
+      return deferred.promise;
+    },
+
   };
 });
 

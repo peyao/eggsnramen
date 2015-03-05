@@ -14,7 +14,6 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var authentication = require('./routes/authentication.js');
 var userActions = require('./routes/user.js');
-var friend = require('./routes/friend.js');
 
 // Passport Uses
 app.use(cookieParser());
@@ -72,17 +71,28 @@ app.get('/api/user/searchlist', function(req, res){
 
 	// Check if user is logged in first.
 	if ( req.isAuthenticated() ) {
-		friend.getUserList(function(user){
-			//res.send(user);
-			console.log("Users: %j", user);
+		userActions.getUserList(function(user){
+			res.send(user);
+			//console.log("Users: %j", user);
 		});
 	}
 	else
 		res.send(401); // Unauthorized
 });
 
-app.post('/api/update/user/recipe-history', function() {
+app.post('/api/update/user/recipe-history', function(req, res) {
 
+});
+
+app.get('/api/image/:image', function(req, res) {
+
+  res.sendfile('assets/user_profile_images/' + req.params.image);
+  /*
+  userActions.getImagePath(req.params.username, function(imagepath){
+    console.log("Sending image: " + imagepath);
+    res.sendfile(imagepath);
+  });
+*/
 });
 
 app.set('port', process.env.PORT || 5000);

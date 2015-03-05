@@ -1,0 +1,63 @@
+<ion-view title="Follow">
+  <ion-content>
+
+    <!-- Search -->
+    <div class="item item-input-inset">
+      <label class="item-input-wrapper">
+        <i class="icon ion-ios7-search placeholder-icon"></i>
+        <input type="search" name="search" placeholder="Search for a user" ng-change="search()" ng-model="data.search" detect-focus>
+      </label>
+      <button class="button button-clear button-small">
+        <i class="ion-close"></i>
+      </button>
+    </div>
+    <!-- Results -->
+    <div class="list" ng-show="data.search">
+      <div class="item item-divider">
+        Search results
+      </div>
+
+      <a class="item item-avatar" ng-repeat="user in data.users" type="item-text-wrap">
+        <img ng-src="/api/image/{{ user.image }}" alt="">
+        <h2>{{user.username}}</h2>
+        <p>{{user.email}}</p>
+      </a>
+    </div>
+    <!-- End Results -->
+    <!-- End Search -->
+
+    <!-- Following -->
+    <div class="list" ng-hide="data.search">
+      <div class="item item-divider">
+        Following
+      </div>
+
+      <div class="item" ng-if="following">
+        <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You are not following anyone.
+      </div>
+
+      <a class="item" ng-repeat="following_user in following" type="item-text-wrap" href="#/tab/user/{{following_user.username}}">
+        {{following_user.username}}
+      </a>
+    </div>
+    <!-- End Following -->
+
+    <!-- Followers -->
+    <div class="list" ng-hide="data.search">
+      <div class="item item-divider">
+        Followers
+      </div>
+
+      <div class="item" ng-if="followers">
+        <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You have no followers.
+      </div>
+
+      <a class="item" ng-repeat="follower in followers" type="item-text-wrap" href="#/tab/user/{{follower.username}}">
+        {{follower.username}}
+      </a>
+    </div>
+
+    <!-- End Followers -->
+
+  </ion-content>
+</ion-view>
