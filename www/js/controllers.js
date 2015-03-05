@@ -291,7 +291,7 @@ angular.module('starter.controllers', [])
 .controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
     $ionicViewService, UserRecipeListService, Analytics){
 
-  Analytics.trackPage('finished-cooking');
+  Analytics.trackPage('finished-cooking-type-B');
 
   $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
 
