@@ -36,9 +36,11 @@
         <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You are not following anyone.
       </div>
 
-      <a class="item" ng-repeat="following_user in following" type="item-text-wrap" ng-click="userActionSheet(following_user.username)">
+      <a class="item item-avatar" ng-repeat="following_user in following" type="item-text-wrap" ng-click="userActionSheet(following_user.username)">
       <!-- href="#/tab/user/{{following_user.username}}"> -->
-        {{following_user.username}}
+        <img ng-src="/api/image/{{ following_user.image }}" alt="">
+        <h2>{{ following_user.username }}</h2>
+        <p>{{ following_user.email }}</p>
       </a>
     </div>
     <!-- End Following -->
@@ -53,8 +55,10 @@
         <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You have no followers.
       </div>
 
-      <a class="item" ng-repeat="follower in followers" type="item-text-wrap" ng-click="userActionSheet(follower_user.username)">
-        {{follower.username}}
+      <a class="item item-avatar" ng-repeat="follower in followers" type="item-text-wrap" ng-click="userActionSheet(follower.username)">
+        <img ng-src="/api/image/{{ follower.image }}" alt="">
+        <h2>{{ follower.username }}</h2>
+        <p>{{ follower.email }}</p>
       </a>
     </div>
 
