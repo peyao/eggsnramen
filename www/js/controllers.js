@@ -122,7 +122,7 @@ angular.module('starter.controllers', [])
   $scope.userActionSheet = function (username) {
     var hideSheet = $ionicActionSheet.show({
       buttons: [
-        { text: 'Check <b>' + followUsername + '\'s</b> profile (WIP)' },
+        { text: 'Check <b>' + username + '\'s</b> profile (WIP)' },
         { text: 'Remove <b>' + username + '</b> from your list (WIP)' }
       ],
       cancelText: 'Cancel',
