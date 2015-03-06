@@ -1,19 +1,17 @@
 <ion-view title="Account">
   <ion-content has-header="true" padding="true">
     
-    <div class="username and password list">
+    <div class="list">
     	<div class="item item-divider">
     		Account Info
     	</div>
-  		<div class="item item-button-right">
-  			Username: {{ user.username }}
-  			<button class="button button-positive">
-  				Edit
-  			</button>
+  		<div class="item">
+  			Username
+        <span class="item-note">{{ user.username }}</span>
   		</div>
   		<div class="item item-button-right">
   			Password
-  			<button class="button button-positive">
+  			<button class="button button-clear" ui-sref="tab.change-password">
   				Edit
   			</button>
   		</div>
@@ -22,28 +20,17 @@
     <div class="item item-divider"> Cooking Level </div>
     <label class="item item-input item-select">
       <div class="input-label">
-        Select<!--{{(user cooking level)}} -->
+        Select
       </div>
       <select name="cookingLevel" 
           ng-model="credentials.cookingLevel"
-          ng-init="credentials.cookingLevel = user.level">
-        <option value="0" selected>Beginner</option>
+          ng-init="credentials.cookingLevel = user.level"
+          ng-change="changeCookingLevel(credentials.cookingLevel)">
+        <option value="0">Beginner</option>
         <option value="1">Intermediate</option>
         <option value="2">Advanced</option>
       </select>
     </label>
-
-    <!--
-    <div class = "cooking level card">
-    	<div class="item item-divider">
-    		Cooking Level
-    	</div>
-      <div class="button-bar">
-    		<a class="button button-balanced" ng-class="{'active' : }">Beginner</a>
-    		<a class="button button-energized" ng-class="{'active' : data.activeButton == 2}">Intermediate</a>
-    		<a class="button button-assertive" ng-class="{'active' : data.activeButton == 3}">Expert</a>
-    	</div> -->
-    </div> <!-- end of cooking level card div-->
   
     <div class="right">
       <button class="button button-clear button-positive" ng-click="logOut()">

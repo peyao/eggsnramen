@@ -42,7 +42,7 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FollowCtrl', function($scope, FollowService, Analytics, $ionicLoading, $ionicPopup, $state) {
+.controller('FollowCtrl', function($scope, FollowService, UserSessionService, Analytics, $ionicLoading, $ionicPopup, $state, $ionicActionSheet) {
   
   Analytics.trackPage('follow');
 
@@ -67,6 +67,13 @@ angular.module('starter.controllers', [])
       });
       $state.go('tab.dash');
     }
+
+    FollowService.followSync(UserSessionService.getUserName(), function(success) {
+      if ( success ) {
+        $scope.followers = FollowService.getFollowers();
+        $scope.following = FollowService.getFollowing();
+      }
+    });
   });
 
   $scope.search = function () {
@@ -75,6 +82,33 @@ angular.module('starter.controllers', [])
       .then(function(matches) {
         $scope.data.users = matches;
       });
+  };
+
+  $scope.followActionSheet = function (followUsername) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'Follow <b>' + followUsername + '</b>' },
+      ],
+      cancelText: 'Cancel',
+      buttonClicked: function(index) {
+        $ionicLoading.show({
+          delay: 50,
+        });
+        FollowService.addFollow(UserSessionService.getUserName(), followUsername, function(success) {
+          $ionicLoading.hide();
+          if (success) {
+            $ionicPopup.alert({
+              title: "You are now follow <b>" + followUsername + "</b>!"
+            });
+          }
+          else {
+            $ionicPopup.alert({
+              title: "We couldn't add " + followUsername + " to your following list! Please try again later."
+            });
+          }
+        });
+      }
+    });
   };
 })
 
@@ -85,7 +119,7 @@ angular.module('starter.controllers', [])
   $scope.otherUser = FollowService.get($stateParams.userName);
 })
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $window, UserSessionService, Analytics) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $ionicLoading, $window, UserSessionService, Analytics) {
 
   Analytics.trackPage('account');
 
@@ -97,12 +131,27 @@ angular.module('starter.controllers', [])
   $scope.logOut = function(){
     UserSessionService.logOut(function(status) {
       if (status) {
-        console.log("Logout successful.");
-        //$state.go('tab.dash', {}, {reload: true});
         $window.location.replace("/");
       }
       else {
         console.log("Logout failed.");
+      }
+    });
+  };
+
+  $scope.changeCookingLevel = function(newCookingLevel) {
+
+    // Show loading screen
+    $ionicLoading.show({
+      delay: 50,
+    });
+
+    UserSessionService.changeCookingLevel(UserSessionService.getUserName(), newCookingLevel, function(success) {
+      $ionicLoading.hide();
+      if (!success) {
+        $ionicPopup.alert({
+          title: "There was an issue changing your cooking level. Try logging out and try again."
+        });
       }
     });
   };
@@ -188,6 +237,60 @@ angular.module('starter.controllers', [])
     var backView = $ionicViewService.getBackView();
     backView.go();
   };
+})
+
+.controller('ChangePasswordCtrl', 
+  function($rootScope, $scope, $state, $ionicPopup, $ionicLoading, $ionicViewService, $window, UserSessionService, Analytics) {
+
+    Analytics.trackPage('change-password');
+
+    $scope.changePassword = function(credentials) {
+
+      // Show loading screen
+      $ionicLoading.show({
+        delay: 50,
+      });
+
+      var username = UserSessionService.getUserName();
+
+      UserSessionService.checkPassword(username, credentials.currentPassword, function(matches) {
+
+        if ( !matches ) {
+          $ionicPopup.alert({
+
+            title: "Your current password is incorrect."
+          });
+          $ionicLoading.hide();
+        }
+
+        else if ( credentials.newPassword !== credentials.verifyNewPassword ) {
+          $ionicPopup.alert({
+
+            title: "The New Password and Verify New Password fields don't match."
+          });
+          $ionicLoading.hide();
+        }
+
+        else {
+          UserSessionService.changePassword(username, credentials.currentPassword, credentials.newPassword, function(success) {
+            if ( success ) {
+              $ionicLoading.hide();
+              var alertPopup = $ionicPopup.alert({
+
+                title: "Your password has been successfully changed.<br><br>You will now be logged out."
+              });
+              alertPopup.then(function(res) {
+                UserSessionService.logOut(function(status) {
+                  if (status) {
+                    $window.location.replace("/");
+                  }
+                });
+              });
+            }
+          });
+        }
+      });
+    };   
 })
 
 // Controller for 'tab-ingredients.html'

@@ -5,23 +5,19 @@ var passport = require('passport'),
 
 module.exports = passport.use(new LocalStrategy(
 	function(username, password, done) {
+
 		console.log("In authentication.js. " + username + ":" + password);
 		User.findOne({ 'username': username }, function(err, user) {
 			if (err) { return done(err); }
 			if (!user) {
 				return done(null, false, { message: 'Incorrect username.' });
 			}
-			/*
-			if (!user.validPassword(password)) {
-				return done(null, false, { message: 'Incorrect password.' });
-			}
-			*/
 
 			// Hash comparison
 			bcrypt.compare(password, user.password, function(err, res){
 
 				// Password failed...
-				if (res == false) {
+				if (res === false) {
 					console.log("bcrypt: Password did not match!");
 					user.err = "Incorrect password";
 					return done(err, false, { message: 'Incorrect password.' });
@@ -36,14 +32,12 @@ module.exports = passport.use(new LocalStrategy(
 ));
 
 module.exports = passport.serializeUser(function(user, done) {
-	//console.log('Serializing: ' + user.username);
 	done(null, user.username);
 });
 
 module.exports = passport.deserializeUser(function(username, done) {
 	// Query DB
 	User.findOne({'username': username}, function(err, user) {
-		//console.log('Deserializing: ' + user.username);
 		done(null, user);
 	});
 });

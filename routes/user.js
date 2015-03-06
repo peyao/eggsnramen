@@ -8,24 +8,19 @@ module.exports = {
 
 		User.findOne({ 'username': username }, function(noExisting, user) {
 			
-			// if no user was returned, user would === null
 			if (user === null) {
 
-				console.log('password: ' + password);
 				bcrypt.genSalt(10, function(err, salt) {
 					bcrypt.hash(password, salt, function(err, hash) {
 
-						// Insert into DB here
-						console.log('password hashed: ' + hash);
-						
 						var newUser = new User({ username: username, email: email, password: hash, level: cookingLevel, image: DEFAULT_IMAGE });
 
 						newUser.save(function(err, savedUser) {
 							if (!err) {
-								console.log('User successfully saved into DB');
+								console.log('User successfully registered into DB');
 							}
 							else {
-								console.log('Error saving user into DB: ' + err);
+								console.log('Error registering user: ' + err);
 							}
 							callback(savedUser);
 						});
@@ -61,12 +56,96 @@ module.exports = {
 		});
 	},
 
+  // UNTESTED
   getImagePath: function (username, callback) {
     User.findOne({ 'username': username }, function(err, user) {
 
       if (err)
         console.log("getImagePath err: " + err);
       return user.image;
+    });
+  },
+
+  changePassword: function (username, currentPass, newPass, callback) {
+
+    bcrypt.genSalt(10, function(err, salt) {
+      bcrypt.hash(newPass, salt, function(err, hash) { 
+        User.findOneAndUpdate(
+          { 'username': username },
+          { 'password': hash },
+          { upsert: false },
+          function(err, user) {
+            if (err)
+              callback(false);
+            else
+              callback(true);
+          }
+        );
+      });
+    });
+  },
+
+  changeCookingLevel: function (username, newCookingLevel, callback) {
+
+    User.findOneAndUpdate({'username': username}, {'level': newCookingLevel}, function(err, user) {
+      if (err)
+        callback(false);
+      else
+        callback(true);
+    });
+  },
+
+  checkPassword: function (username, password, callback) {
+    User.findOne({ 'username': username }, function(err, user) {
+
+      // Hash comparison
+      bcrypt.compare(password, user.password, function(err, res){
+
+        // Password failed...
+        if (res === false) {
+          console.log("bcrypt: Password did not match!");
+          callback(false);
+        }
+        else {
+          // Password matches!
+          console.log("bcrypt: Password matches!");
+          callback(true);
+        }
+      });
+    });
+  },
+
+  addFollow: function (username, followUsername, callback) {
+    // Update first user.
+    User.findOneAndUpdate({'username': username}, 
+      {'following': followUsername}, 
+      {upsert: true}, 
+      function(err, user) {
+        if (err)
+          callback(false);
+      }
+    );
+
+    // Update second user.
+    User.findOneAndUpdate({'username': followUsername}, 
+      {'followers': username}, 
+      {upsert: true}, 
+      function(err, user) {
+        if (err)
+          callback(false);
+        else
+          callback(true);
+      }
+    );
+  },
+
+  getFollowLists: function (username, callback) {
+
+    User.findOne({'username': username}, function(err, user) {
+      if (err)
+        callback(false, {});
+      else
+        callback(true, {'following': user.following, 'followers': user.followers});
     });
   }
 };

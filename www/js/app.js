@@ -39,6 +39,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     return $.param(data);
   };
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+  $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -160,6 +161,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         'tab-account-login':{
           templateUrl: 'templates/tab-account-registration.html',
           controller: 'AccountRegistrationCtrl'
+        }
+      }
+    })
+
+    .state('tab.change-password', {
+      url: '/changepassword',
+      views: {
+        'tab-account': {
+          templateUrl: 'templates/change-password.html',
+          controller: 'ChangePasswordCtrl'
         }
       }
     });

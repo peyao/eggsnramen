@@ -17,7 +17,7 @@
         Search results
       </div>
 
-      <a class="item item-avatar" ng-repeat="user in data.users" type="item-text-wrap">
+      <a class="item item-avatar" ng-repeat="user in data.users" type="item-text-wrap" ng-click="followActionSheet(user.username)">
         <img ng-src="/api/image/{{ user.image }}" alt="">
         <h2>{{user.username}}</h2>
         <p>{{user.email}}</p>
@@ -32,7 +32,7 @@
         Following
       </div>
 
-      <div class="item" ng-if="following">
+      <div class="item" ng-hide="following.length">
         <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You are not following anyone.
       </div>
 
@@ -48,7 +48,7 @@
         Followers
       </div>
 
-      <div class="item" ng-if="followers">
+      <div class="item" ng-hide="followers.length">
         <i class="ion-alert"></i>&nbsp;&nbsp;&nbsp;&nbsp;You have no followers.
       </div>
 

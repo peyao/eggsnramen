@@ -7,19 +7,38 @@ var servicesModule = angular.module('starter.services', []);
 servicesModule.factory('FollowService', function($http, $q, $timeout) {
   // Might use a resource here that returns a JSON array
 
-  var followers = {};
-  var following = {};
-  var userList = {};
+  var followers = [];
+  var following = [];
+  var userList = [];
 
   return {
     
     // Need to pass in User object and simply get the JSON array.
-    // TODO
+    followSync: function(username, callback) {
+      $http.get('/api/user/' + username + '/follow')
+        .success(function(data, status) {
+
+          followers = [];
+          following = [];
+          for ( var i = 0; i < userList.length; ++i ) {
+            for ( var j = 0; j < data.following.length; ++j ) {
+              if ( userList[i].username === data.following[j] )
+                  following.push(userList[i]);
+              if ( userList[i].username === data.followers[j] )
+                  followers.push(userList[i]);
+            }
+          }
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
+        });
+    },
+
     getFollowers: function() {
       return followers;
     },
 
-    //TODO
     getFollowing: function() {
       return following;
     },
@@ -51,6 +70,7 @@ servicesModule.factory('FollowService', function($http, $q, $timeout) {
 
     },
 
+
     searchList: function(searchFilter) {
       var deferred = $q.defer();
 
@@ -67,6 +87,16 @@ servicesModule.factory('FollowService', function($http, $q, $timeout) {
       return deferred.promise;
     },
 
+    addFollow: function(username, followUsername, callback) {
+      $http.put('/api/user/' + username, {followUsername: followUsername})
+        .success(function(status) {
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
+        });
+    }
+
   };
 });
 
@@ -78,7 +108,7 @@ servicesModule.factory('UserSessionService', function($http){
 
     // OUTPUT: Runs callback with user data if user is logged in, NULL otherwise
     checkLoggedIn: function(callback) {
-      $http.get('/api/user/loggedin').
+      $http.get('/api/user').
         success(function(data, status, headers, config) {
           if (typeof data.username !== 'undefined') {
             console.log ("data.username: " + data.username);
@@ -113,28 +143,51 @@ servicesModule.factory('UserSessionService', function($http){
         error(function(data, status) {
           callback(false);
         });
-        /*
-        then(function(res) {
-          console.log("post response: " + res.status);
-          if (res.status === 200)
-            callback(true);
-          else
-            callback(false);
-        });
-        */
     },
 
     logOut: function(callback) {
-      $http.post('/api/user/logout').
-        success(function(status) {
+      $http.post('/api/user/logout')
+      .success(function(status) {
           callback(true);
         });
     },
 
     register: function(username, email, password, cookingLevel, callback) {
-      $http.post('/api/user/register', {username: username, email: email, password: password, cookingLevel: cookingLevel}).
-        success(function(data, status) {
+      $http.post('/api/user', {username: username, email: email, password: password, cookingLevel: cookingLevel})
+      .success(function(data, status) {
           callback(data);
+        });
+    },
+
+    checkPassword: function(username, password, callback) {
+      $http.post('/api/user/passwordcheck', {username: username, password: password})
+        .success(function(status) {
+          console.log("Current password matches.");
+          callback(true);
+        })
+        .error(function(status) {
+          console.log("checkPassword API return (status) : " + status);
+          callback(false);
+        });
+    },
+
+    changePassword: function(username, currentPass, newPass, callback) {
+      $http.put('/api/user/' + username, {currentPass: currentPass, newPass: newPass})
+        .success(function(status) {
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
+        });
+    },
+
+    changeCookingLevel: function(username, newCookingLevel, callback) {
+      $http.put('/api/user/' + username, {newCookingLevel: newCookingLevel})
+        .success(function(status) {
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
         });
     }
   };
@@ -160,11 +213,9 @@ servicesModule.factory('UserRecipeListService', function(){
       if( a.key < b.key ) {
         return 1;
       }
-
       else if ( a.key > b.key ) {
         return -1;
       }
-
       return 0;
     };
   };
