@@ -9,8 +9,8 @@ var userSchema = new Schema({
 	image: 		{ type: String, required: true },
 	level: 		{ type: String, required: true},
 	recipe_history: [{ type: String }],
-	followers: 		[{ type: String }],
-	following: 		[{ type: String }]
+	followers: 		[{ type: String, unique: true }],
+	following: 		[{ type: String, unique: true }]
 });
 
 module.exports = mongoose.model('User', userSchema);

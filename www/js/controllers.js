@@ -85,6 +85,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.followActionSheet = function (followUsername) {
+    var quit = false;
     var hideSheet = $ionicActionSheet.show({
       buttons: [
         { text: 'Follow <b>' + followUsername + '</b>' },
@@ -94,6 +95,19 @@ angular.module('starter.controllers', [])
         $ionicLoading.show({
           delay: 50,
         });
+
+        for ( var i = 0; i < $scope.followers.length; i++ ) {
+
+          if ( followUsername === $scope.followers[i].username ) {
+            $ionicLoading.hide();
+            var ionicPopup = $ionicPopup.alert({
+              title: "You are already following <b>" + followUsername + "</b>!"
+            });
+            return;
+          }
+        }
+
+
         FollowService.addFollow(UserSessionService.getUserName(), followUsername, function(success) {
           $ionicLoading.hide();
           if (success) {
