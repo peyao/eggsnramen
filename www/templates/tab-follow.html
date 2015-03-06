@@ -7,7 +7,7 @@
         <i class="icon ion-ios7-search placeholder-icon"></i>
         <input type="search" name="search" placeholder="Search for a user" ng-change="search()" ng-model="data.search" detect-focus>
       </label>
-      <button class="button button-clear button-small">
+      <button class="button button-clear button-small" ng-click="data.search = null">
         <i class="ion-close"></i>
       </button>
     </div>

@@ -118,21 +118,25 @@ module.exports = {
   addFollow: function (username, followUsername, callback) {
     // Update first user.
     User.findOneAndUpdate({'username': username}, 
-      {'following': followUsername}, 
-      {upsert: true}, 
+      {$push: {'following': followUsername}}, 
+      {safe: true, upsert: true}, 
       function(err, user) {
-        if (err)
+        if (err) {
           callback(false);
+          return;
+        }
       }
     );
 
     // Update second user.
     User.findOneAndUpdate({'username': followUsername}, 
-      {'followers': username}, 
-      {upsert: true}, 
+      {$push: {'followers': username}}, 
+      {safe: true, upsert: true}, 
       function(err, user) {
-        if (err)
+        if (err) {
           callback(false);
+          return;
+        }
         else
           callback(true);
       }

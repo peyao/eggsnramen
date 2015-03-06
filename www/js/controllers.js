@@ -97,8 +97,16 @@ angular.module('starter.controllers', [])
         FollowService.addFollow(UserSessionService.getUserName(), followUsername, function(success) {
           $ionicLoading.hide();
           if (success) {
-            $ionicPopup.alert({
+            var ionicPopup = $ionicPopup.alert({
               title: "You are now following <b>" + followUsername + "</b>!"
+            });
+            ionicPopup.then(function(res) {
+              FollowService.followSync(UserSessionService.getUserName(), function() {
+                $scope.followers = FollowService.getFollowers();
+                $scope.following = FollowService.getFollowing();
+                $scope.data.search = null;
+                hideSheet();
+              });
             });
           }
           else {
@@ -110,6 +118,22 @@ angular.module('starter.controllers', [])
       }
     });
   };
+
+  $scope.userActionSheet = function (username) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'Check <b>' + followUsername + '\'s</b> profile (WIP)' },
+        { text: 'Remove <b>' + username + '</b> from your list (WIP)' }
+      ],
+      cancelText: 'Cancel',
+      buttonClicked: function(index) {
+        $ionicPopup.alert({
+          title: "This is a work in progress."
+        });
+      }
+    });
+  };
+
 })
 
 .controller('UserDetailCtrl', function($scope, $stateParams, FollowService, Analytics) {
