@@ -98,7 +98,7 @@ angular.module('starter.controllers', [])
           $ionicLoading.hide();
           if (success) {
             $ionicPopup.alert({
-              title: "You are now follow <b>" + followUsername + "</b>!"
+              title: "You are now following <b>" + followUsername + "</b>!"
             });
           }
           else {
