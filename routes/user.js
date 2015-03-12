@@ -151,5 +151,36 @@ module.exports = {
       else
         callback(true, {'following': user.following, 'followers': user.followers});
     });
+  },
+
+  addToHistory: function (username, recipeName, callback) {
+    User.findOneAndUpdate({'username': username}, 
+      {$push: {'recipe_history': recipeName}}, 
+      {safe: true, upsert: true}, 
+      function(err, user) {
+        if (err) {
+          callback(false);
+          return;
+        }
+        else
+          callback(true);
+      }
+    );
+  },
+
+  addToFavorites: function (username, recipeName, callback) {
+    User.findOneAndUpdate({'username': username}, 
+      {$push: {'favorites': recipeName}}, 
+      {safe: true, upsert: true}, 
+      function(err, user) {
+        if (err) {
+          callback(false);
+          return;
+        }
+        else
+          callback(true);
+      }
+    );
   }
+
 };

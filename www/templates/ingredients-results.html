@@ -5,7 +5,9 @@
       
       <!-- Recipe card header -->
       <div class="item item-icon-right">
-        <i class="icon ion-leaf balanced"></i>
+        <i class="icon ion-leaf balanced" ng-if="recipe.difficulty == 0"></i>
+        <i class="icon ion-flame energized" ng-if="recipe.difficulty == 1"></i>
+        <i class="icon ion-egg royal" ng-if="recipe.difficulty == 2"></i>
         <h2>{{ recipe.name }}</h2>
         <p>{{ recipe.description }}</p>
       </div>
@@ -15,7 +17,7 @@
         <img ng-src="{{ recipe.image }}">
       </div>
       
-      <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: '{{ recipe.name }}' })">
+      <a class="item item-icon-left assertive left" ui-sref="tab.recipe({ name: recipe.name })">
         <i class="icon ion-flame"></i>
         Cook this now!
       </a>

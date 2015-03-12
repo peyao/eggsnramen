@@ -9,7 +9,8 @@ var recipeSchema = new Schema({
 	required_items: [{ type: String }],
 	optional_items: [{ type: String }],
 	image: String,
-	author: String
+	author: String,
+	times_used: Number
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);

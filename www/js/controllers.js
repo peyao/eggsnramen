@@ -18,28 +18,121 @@ angular.module('starter.controllers', [])
       $rootScope.loggedIn = status;
   });
 
-  console.log("TabCtrl loggedIn: " + $rootScope.loggedIn);
-
   setTabLoginStatus($rootScope);
 })
 
 
 
-.controller('DashCtrl', function($scope, $rootScope, UserSessionService, Analytics) {
+.controller('DashCtrl', function($scope, $rootScope, UserSessionService, RecipeService, 
+    Analytics, $ionicActionSheet, $ionicPopup, $state, UserRecipeListService) {
 
   Analytics.trackPage('dashboard');
 
+  $scope.recipeArr = [];
+  $scope.popularArr = [];
+  var recentlyUsedLength = 3;
+
+  $scope.recipeActionSheet = function(recipeName) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'Cook <b>' + recipeName + '</b>.' },
+        { text: 'Add <b>' + recipeName + '</b> to your favorites' }
+      ],
+      cancelText: 'Cancel',
+      buttonClicked: function(index) {
+
+        // Cook
+        if (index === 0) {
+
+          UserRecipeListService.getRecipesFromDB(function(success) {
+            $state.go('tab.recipe', { 'name': recipeName });
+          });
+        }
+
+        // Add to favorites
+        else if (index === 1) {
+          if ($rootScope.loggedIn)
+            UserSessionService.addRecipeToFavorites(UserSessionService.getUserName(), recipeName, function(success) {
+              if (success) {
+                $ionicPopup.alert({
+                  title: "Recipe added to favorites!"
+                });
+              }
+              else {
+                $ionicPopup.alert({
+                  title: "Recipe could not be added to favorites, please try again later."
+                });
+              }
+            });
+          else {
+            $ionicPopup.alert({
+              title: "Please login first."
+            });
+          }
+        }
+      }
+    });
+  };
+
   UserSessionService.checkLoggedIn(function(user) {
 
+    // User logged in
     if (user !== null) {
-      console.log('Dash: User has a session.');
 
       $scope.user = user;
       $scope.loggedIn = true;
       $rootScope.loggedIn = true;
       setTabLoginStatus($rootScope);
+
+      // Only grab the 3 most recently used recipes.
+      if ($scope.user.recipe_history.length < 3)
+        recentlyUsedLength = $scope.user.recipe_history.length;
+
+      for (var i = 0; i < recentlyUsedLength; i++) {
+        RecipeService.getRecipe($scope.user.recipe_history[i], function(recipe) {
+          $scope.recipeArr.push(recipe);
+        });
+      }
+
+      RecipeService.getPopular(function(recipes) {
+        for (var i = 0; i < 5; i++) {
+          $scope.popularArr.push(recipes[i]);
+        }
+      });
+    }
+
+    // User not logged in
+    else {
+      RecipeService.getPopular(function(recipes) {
+        $scope.popularArr = recipes;
+      });
     }
   });
+
+})
+
+.controller('FavoritesCtrl', function($scope, $rootScope, FollowService, UserSessionService, 
+    Analytics, $ionicLoading, $ionicPopup, $state, $ionicActionSheet, RecipeService) {
+
+  $scope.favoritesArr = [];
+
+  if ($rootScope.loggedIn) {
+    var favorites = UserSessionService.getUserFavorites();
+    for (var i = 0; i < favorites.length; i++) {
+      RecipeService.getRecipe(favorites[i], function(recipe) {
+        $scope.favoritesArr.push(recipe);
+      });
+    }
+  }
+  else {
+    var ionicPopup = $ionicPopup.alert({
+      title: "Please login first."
+    });
+    ionicPopup.then(function(res) {
+      $state.go('tab.dash');
+    });
+  }
+
 })
 
 .controller('FollowCtrl', function($scope, FollowService, UserSessionService, Analytics, $ionicLoading, $ionicPopup, $state, $ionicActionSheet) {
@@ -58,8 +151,6 @@ angular.module('starter.controllers', [])
 
   FollowService.getUserList(function(userList) {
     $ionicLoading.hide();
-
-    console.log('userList[0].username: ' + userList[0].username);
 
     if(typeof userList[0].username === 'undefined') {
       $ionicPopup.alert({
@@ -224,7 +315,11 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.forgotPassword = function(){};
+  $scope.forgotPassword = function(){
+    $ionicPopup.alert({
+      title: "Sorry, this is a work in progress."
+    });
+  };
 
   $scope.createAccount = function() {
     $state.go('tab.registration');
@@ -239,7 +334,27 @@ angular.module('starter.controllers', [])
   
   $scope.register = function(credentials, registerRedirect) {
 
-    //console.log('cookingLevel selected: ' + credentials.cookingLevel);
+    // Validate password
+    if ( !credentials.username || !credentials.email || !credentials.password || !credentials.verifyPassword ) {
+      $ionicPopup.alert({ title: "Please enter all fields before proceeding." });
+      return;
+    }
+    else if ( credentials.password !== credentials.verifyPassword ) {
+      $ionicPopup.alert({ title: "Your password don't match!" });
+      return;
+    }
+    else if ( credentials.password.length < 5 ) {
+      $ionicPopup.alert({ title: "Your password must be at least 5 characters long." });
+      return;
+    }
+    else if ( !validateEmail(credentials.email) ) {
+      $ionicPopup.alert({ title: "Please enter a valid email address." });
+      return;
+    }
+    else if ( credentials.username < 5 ) {
+      $ionicPopup.alert({ title: "Your username must be at least 5 characters long." });
+      return;
+    }
 
     if ( credentials.password === credentials.verifyPassword )
       UserSessionService.register(credentials.username, credentials.email, credentials.password, credentials.cookingLevel, function(user){
@@ -412,40 +527,88 @@ angular.module('starter.controllers', [])
   $ionicLoading.hide();
 })
 
-.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService, Analytics){
+.controller('RecipeCtrl', function($scope, $state, $stateParams, UserRecipeListService, 
+    Analytics, UserSessionService, $ionicPopup, $ionicActionSheet, $rootScope, $window,
+    RecipeService){
 
-  $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
+  Analytics.trackPage('Recipe Page (' + $stateParams.name + ")");
 
-  Analytics.trackPage('Recipe Page (' + $scope.recipe.name + ")");
-
-  // Sets a constant 'currentRecipe' so we can easily get recipe obj of what user is currenly using
-  //UserRecipeListService.setCurrentRecipe($scope.recipe);
+  UserRecipeListService.getSpecificRecipe($stateParams.name, function(recipe) {
+    $scope.recipe = recipe;
+  });
 
   // Called when user clicks 'Done>' button on nav-bar
   $scope.finishedCooking = function() {
 
     // Redirect
-    $state.go('tab.recipe-done', { name: $scope.recipe.name });
+    //$state.go('tab.recipe-done', { name: $scope.recipe.name });
+    
+    // Log cooking complete to the user's history in database
+    UserSessionService.addRecipeToHistory(UserSessionService.getUserName(), $scope.recipe.name, function(status) {
+      if (!status)
+        console.log("Recipe failed to be added to user history");
+    });
+    RecipeService.incrementRecipeUse($scope.recipe.name);
+
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'Add <b>' + $scope.recipe.name + '</b> to your favorites!' },
+        { text: 'Go back to the dashboard.' }
+      ],
+      cancelText: 'Cancel',
+      buttonClicked: function(index) {
+        if (index === 0) {
+          if ($rootScope.loggedIn)
+            UserSessionService.addRecipeToFavorites(UserSessionService.getUserName(), $scope.recipe.name, function(success) {
+              if (success) {
+                $ionicPopup.alert({
+                  title: "Recipe added to favorites!"
+                });
+              }
+              else {
+                $ionicPopup.alert({
+                  title: "Recipe could not be added to favorites, please try again later."
+                });
+              }
+            });
+          else {
+            $ionicPopup.alert({
+              title: "Please login first."
+            });
+          }
+        }
+
+        // Back to dashboard
+        else if (index === 1) {
+          //$state.go('tab.dash');          
+          $window.location.replace("/");
+        }
+      }
+    }); 
   };
 })
 
-.controller('RecipeDoneCtrl', function($scope, $state, $stateParams, 
-    $ionicViewService, UserRecipeListService, Analytics){
+.controller('RecipeDoneCtrl', function($scope, $state, $stateParams, RecipeService,
+    $ionicViewService, UserRecipeListService, UserSessionService, Analytics){
 
   Analytics.trackPage('finished-cooking');
+  UserRecipeListService.getSpecificRecipe($stateParams.name, function(recipe) {
+    $scope.recipe = recipe;
 
-  $scope.recipe = UserRecipeListService.getSpecificRecipe($stateParams.name);
+    // Log cooking complete to the user's history in database
+    UserSessionService.addRecipeToHistory(UserSessionService.getUserName(), $scope.recipe.name, function(status) {
+      if (!status)
+        console.log("Recipe failed to be added to user history");
+    });
 
-  //Google Analytics
-  Analytics.trackEvent('Finished cooking @ MAIN.', $scope.recipe.name);
-
-  // User is done using the 'currentRecipe', so we can clear it
-  //UserRecipeListService.deleteCurrentRecipe();
+    RecipeService.incrementRecipeUse($scope.recipe.name);
+  });
 
   $scope.goDash = function() {
 
     var history = $ionicViewService.getBackView();
     $ionicViewService.goToHistoryRoot('002');
+    $state.go('tab.dash');
   };
 
 })
@@ -476,7 +639,8 @@ var setTabLoginStatus = function($rootScope) {
   }
 };
 
-var loginCallback = function(status) {
+var validateEmail = function(email) {
 
-  
+  var regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regex.test(email); 
 };

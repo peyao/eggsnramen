@@ -15,6 +15,7 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var authentication = require('./routes/authentication.js');
 var userActions = require('./routes/user.js');
+var recipeActions = require('./routes/recipe.js');
 var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME || 'app33525076@heroku.com', process.env.SENDGRID_PASSWORD || 'lijpylyv');
 
 // Passport Uses
@@ -159,8 +160,57 @@ app.get('/api/user/:username/follow', function(req, res) {
   });
 });
 
-app.post('/api/update/user/recipe-history', function(req, res) {
+app.post('/api/user/recipehistory', function(req, res) {
+  userActions.addToHistory(req.body.username, req.body.recipeName, function(success) {
+    if (success) {
+      res.send(200);
+    }
+    else {
+      res.send(500);
+    }
+  });
+});
 
+app.post('/api/user/favorite', function(req, res) {
+  userActions.addToFavorites(req.body.username, req.body.recipeName, function(success) {
+    if (success) {
+      res.send(200);
+    }
+    else {
+      res.send(500);
+    }
+  });
+});
+
+app.get('/api/recipe/:recipeName', function(req, res) {
+  recipeActions.getRecipe(req.params.recipeName, function(recipe) {
+    if (recipe)
+      res.send(recipe);
+    else
+      res.send(500);
+  });
+});
+
+app.put('/api/recipe/:recipeName', function(req, res) {
+  console.log('Received increment request for: ' + req.params.recipeName);
+  recipeActions.incrementRecipeUse(req.params.recipeName, function(success) {
+    if (success) {
+      res.send(200);
+    }
+    else {
+      res.send(500);
+    }
+  });
+});
+
+app.get('/api/popular', function(req, res) {
+  console.log('Calling getPopular');
+  recipeActions.getPopular(function(recipes) {
+    if (recipes)
+      res.send(recipes);
+    else
+      res.send(500);
+  });
 });
 
 app.get('/api/image/:image', function(req, res) {
@@ -184,7 +234,7 @@ app.get('/api/user/forgotpassword/:email', function(req, res) {
   
 });
 
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 4000);
 
 app.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,88 +1,57 @@
 <ion-view title="eggsnramen">
-  
-    <!-- Main Content of Dashbord/Home -->
-    <ion-content class="padding">
-       
+
+  <ion-nav-buttons side="right" ng-if="loggedIn">
+    <button class="button button-clear button-positive icon-right ion-chevron-right" ui-sref="tab.favorites">Favorites</button>
+  </ion-nav-buttons>
+
+<!-- Main Content of Dashbord/Home -->
+<ion-content class="padding">
+
         <!-- Test Actions Button
         <button class="button button-hungry button-block button-positive" ng-click="test()">
             Test()
         </button>
-        -->
+      -->
 
-        <!-- "I'm Hungry" Button -->
-        <a class="button button-hungry button-block button-assertive icon-right ion-chevron-right" ui-sref="tab.ingredients">
-          Let's Cook!
-        </a>
-        
-        <!-- Your Recent Section-->
-        <br>
-        <!-- ng-show directive and ng-hide class only shows Your Recent if user is logged in -->
-        <div ng-show="user.username" class="dash-card ng-hide">
-            <span class="card-title">Recently Used</span>
-            <div class="row">
+      <!-- "I'm Hungry" Button -->
+      <a class="button button-hungry button-block button-assertive icon-right ion-chevron-right" ui-sref="tab.ingredients">
+        Let's Cook!
+      </a>
 
-                <!-- Your Recent 1 -->
-                <div class="col">
-                    <div class="item divider recipe-item-header">Roasted Chicken</div>
-
-                    <div class="item item-image">
-                        <img src="http://i.imgur.com/bpLKCav.jpg" alt="">
-                    </div>
-
-                    <div class="item item-text-wrap">
-                        A delicious treat you made before.
-                    </div>
-                </div>
-                
-                <!-- Your Recent 2 -->
-                <div class="col">
-                    <div class="item divider recipe-item-header">Pancakes</div>
-
-                    <div class="item item-image">
-                        <img src="http://i.imgur.com/tQt0xas.png" alt="">
-                    </div>
-
-                    <div class="item item-text-wrap">
-                        Something yummy you always like.
-                    </div>
-                </div>
-            </div> <!-- End 'row' -->
+      <!-- Your Recent Section-->
+      <!-- ng-show directive and ng-hide class only shows Your Recent if user is logged in -->
+      <div ng-show="user.username" class="card dash-card" ng-if="recipeArr.length > 0">
+        <div class="item item-divider">
+          Recently Used
         </div>
-        
-        <!-- Popular Section -->
-        <br>
-        <div class="dash-card">
-            <span class="card-title">Popular</span>
-            <div class="row" data-equal-heights>
-
-                <!-- Your Recent 1 -->
-                <div class="col">
-                    <div class="item divider recipe-item-header">Bison Burger</div>
-
-                    <div class="item item-image">
-                        <img src="http://i.imgur.com/a1GwO8A.jpg" alt="">
-                    </div>
-
-                    <div class="item item-text-wrap">
-                        Try this new scrumptious food!
-                    </div>
-                </div>
-
-                <!-- Your Recent 2 -->
-                <div class="col">
-                    <div class="item divider recipe-item-header">Gnocchi with Beef</div>
-
-                    <div class="item item-image">
-                        <img src="http://i.imgur.com/7h6CwQl.jpg" alt="">
-                    </div>
-
-                    <div class="item item-text-wrap">
-                        This tasty bite is a friend favorite.
-                    </div>
-                </div>
-
-            </div> <!-- End 'row' -->
+        <div class="item item-text-wrap item-avatar" ng-repeat="recipe in recipeArr" ng-click="recipeActionSheet(recipe.name)">
+          <img ng-src="{{ recipe.image }}">
+          <h2>
+            {{ recipe.name }}&nbsp;&nbsp;
+            <i class="icon ion-leaf balanced" ng-if="recipe.difficulty == 0"></i>
+            <i class="icon ion-flame energized" ng-if="recipe.difficulty == 1"></i>
+            <i class="icon ion-egg royal" ng-if="recipe.difficulty == 2"></i>
+          </h2>
+          <p>{{ recipe.description }}</p>
         </div>
-        
+      </div>
+
+      <!-- Popular Section -->
+      <div class="card dash-card">
+        <div class="item item-divider">
+          Popular
+        </div>
+        <div class="item item-text-wrap item-avatar" ng-repeat="recipe in popularArr" ng-click="recipeActionSheet(recipe.name)">
+          <img ng-src="{{ recipe.image }}">
+          <h2>
+            {{ recipe.name }}&nbsp;&nbsp;
+            <i class="icon ion-leaf balanced" ng-if="recipe.difficulty == 0"></i>
+            <i class="icon ion-flame energized" ng-if="recipe.difficulty == 1"></i>
+            <i class="icon ion-egg royal" ng-if="recipe.difficulty == 2"></i>
+          </h2>
+          <p>{{ recipe.description }}</p>
+        </div> 
+      </div>
+
     </ion-content>
-</ion-view>
+  </ion-view>

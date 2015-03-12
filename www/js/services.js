@@ -1,8 +1,34 @@
 var servicesModule = angular.module('starter.services', []);
 
-/**
- * A simple example service that returns some data.
- */
+servicesModule.factory('RecipeService', function($http, $q, $timeout) {
+
+  return {
+
+    getRecipe: function(recipeName, callback) {
+      $http.get('/api/recipe/' + recipeName, { recipeName: recipeName })
+        .success(function(data) {
+          callback(data);
+        })
+        .error(function(status) {
+          callback(null);
+        });
+    },
+
+    getPopular: function(callback) {
+      $http.get('/api/popular')
+        .success(function(data) {
+          callback(data);
+        })
+        .error(function(status) {
+          callback(null);
+        });
+    },
+
+    incrementRecipeUse: function(recipeName) {
+      $http.put('/api/recipe/' + recipeName);
+    }
+  };
+});
 
 servicesModule.factory('FollowService', function($http, $q, $timeout) {
   // Might use a resource here that returns a JSON array
@@ -111,7 +137,6 @@ servicesModule.factory('UserSessionService', function($http){
       $http.get('/api/user').
         success(function(data, status, headers, config) {
           if (typeof data.username !== 'undefined') {
-            console.log ("data.username: " + data.username);
             user = data;
             callback(data);
           }
@@ -127,6 +152,10 @@ servicesModule.factory('UserSessionService', function($http){
 
     getUserLevel: function() {
       return user.level;
+    },
+
+    getUserFavorites: function() {
+      return user.favorites;
     },
 
     getUserObject: function() {
@@ -189,12 +218,32 @@ servicesModule.factory('UserSessionService', function($http){
         .error(function(status) {
           callback(false);
         });
+    },
+
+    addRecipeToHistory: function(username, recipeName, callback) {
+      $http.post('/api/user/recipehistory', { username: username, recipeName: recipeName })
+        .success(function(status) {
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
+        });
+    },
+
+    addRecipeToFavorites: function(username, recipeName, callback) {
+      $http.post('/api/user/favorite', { username: username, recipeName: recipeName })
+        .success(function(status) {
+          callback(true);
+        })
+        .error(function(status) {
+          callback(false);
+        });
     }
   };
 });
 
 // Manages the User's Recipe List
-servicesModule.factory('UserRecipeListService', function(){
+servicesModule.factory('UserRecipeListService', function($http){
 
   // This collects `why` the recipe was selected (due to which ingredients)
   //var whyResultIngredientList = [];
@@ -222,21 +271,20 @@ servicesModule.factory('UserRecipeListService', function(){
 
   return {
 
+    getRecipesFromDB: function(callback) {
+      // Grab Recipes from MongoDB
+      $http.get('/api/recipes').success(function(data, status, headers, config){
+        sortedRecipes = data;
+        callback(sortedRecipes);
+      });
+    },
+
     // sortRecipes
     // Input  ::  checkedArray - An array of all the checked ingredients
     //            recipes - JSON object with all the available recipes
     // Output ::  bool true - found recipes
     //            bool false - no recipes found
     sortRecipes: function(checkedArray, recipes) {
-
-      // ALGORITHM
-      // ---------
-      // First find a recipe that uses the FIRST ingredient, then increment the priority.
-      // On that same recipe, use our next ingredientsArr element and see if it matches
-      // the recipe's other 'required_items' array. Every element that matches will
-      // increment the priority. When this recipe has finished assigning priority,
-      // we look for another recipe that has the first element of our ingredientsArr,
-      // and repeat.
 
       var matchedRecipes = []; // List recipes displayed in 'ingredients-results.html'
 
@@ -253,14 +301,6 @@ servicesModule.factory('UserRecipeListService', function(){
           // For each required_items in each recipe...
           for ( k = 0; k < recipesCopy[j].required_items.length; ++k ) {
             
-            /*
-            console.log('Match?: ' + '"' +  
-                          recipesCopy[j].required_items[k] + '" and "' + 
-                          checkedArray[i].name + '"');
-            console.log("required_items.length of '" + recipesCopy[j].name + "': " +
-              recipesCopy[j].required_items.length);
-            */
-
             // Add keys to JSON object if they don't already exist
             if (!recipesCopy[j].hasOwnProperty('required_priority')) {
               recipesCopy[j].required_priority = 0;
@@ -278,10 +318,6 @@ servicesModule.factory('UserRecipeListService', function(){
               recipesCopy[j].required_priority = recipesCopy[j].required_priority + 2;
               recipesCopy[j].user_checked_required++;
 
-              /*
-              console.log("Increment priority of " + recipesCopy[j].name + " by 2 because of " +
-                checkedArray[i].name + " === " + recipesCopy[j].required_items[k] );
-              */
             }
           }
 
@@ -303,17 +339,12 @@ servicesModule.factory('UserRecipeListService', function(){
         recipesCopy[i].total_priority = recipesCopy[i].required_priority + 
                                         recipesCopy[i].optional_priority;
 
-        //console.log('recipesCopy[i].required_priority: ' + recipesCopy[i].required_priority);
-        //console.log('recipesCopy[i].optional_priority: ' + recipesCopy[i].optional_priority);
-
         if ( recipesCopy[i].required_priority > 0 &&
           recipesCopy[i].required_items.length === recipesCopy[i].user_checked_required ) {
           
           matchedRecipes.push(recipesCopy[i]);
         }
       }
-
-      //console.log("matchedRecipes.length: " + matchedRecipes.length);
       
       // Sort the recipe list matchedRecipes based on 'priority'
       sortedRecipes = matchedRecipes;//.sort(sortByKey('priority'));
@@ -341,15 +372,32 @@ servicesModule.factory('UserRecipeListService', function(){
 
     // Searches our recipes for one that matches the input name of the recipe,
     // then returns the recipe JSON object
-    getSpecificRecipe: function(recipeName){
+    getSpecificRecipe: function(recipeName, callback){
 
-      for ( i = 0; i < sortedRecipes.length; ++i ) {
+      if (sortedRecipes.length === 0) {
 
-        if ( sortedRecipes[i].name === recipeName )
-          return sortedRecipes[i];
+        $http.get('/api/recipes').success(function(data, status, headers, config){
+
+          sortedRecipes = data;
+          console.log('recipelength: ' + sortedRecipes[0].name);
+
+          for ( i = 0; i < sortedRecipes.length; ++i ) {
+            if ( sortedRecipes[i].name === recipeName ) {
+              callback(sortedRecipes[i]);
+            }
+          }
+        });
       }
-
-      return false;
+      else {
+        for ( i = 0; i < sortedRecipes.length; ++i ) {
+          if ( sortedRecipes[i].name === recipeName ) {
+            callback(sortedRecipes[i]);
+            return;
+          }
+        }
+        console.log('Cannot find: ' + recipeName + ' in sortedRecipes with length ' + sortedRecipes.length);
+        callback(null);
+      }      
     },
 
     setCurrentRecipe: function(recipe){

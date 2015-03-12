@@ -1,0 +1,21 @@
+<ion-view title="Favorites">
+  <ion-content class="padding">
+
+    <div class="card dash-card">
+      <div class="item item-divider">
+        Favorites
+      </div>
+      <a class="item item-text-wrap item-avatar" ng-repeat="recipe in favoritesArr" ui-sref="tab.recipe({ name: recipe.name })">
+        <img ng-src="{{ recipe.image }}">
+        <h2>
+          {{ recipe.name }}&nbsp;&nbsp;
+          <i class="icon ion-leaf balanced" ng-if="recipe.difficulty == 0"></i>
+          <i class="icon ion-flame energized" ng-if="recipe.difficulty == 1"></i>
+          <i class="icon ion-egg royal" ng-if="recipe.difficulty == 2"></i>
+        </h2>
+        <p>{{ recipe.description }}</p>
+      </a> 
+    </div>
+
+  </ion-content>
+</ion-view>

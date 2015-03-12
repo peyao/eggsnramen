@@ -55,8 +55,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       templateUrl: "templates/tabs.html"
     })
 
-    // Each tab has its own nav history stack:
-
+    // DASHBOARD
     .state('tab.dash', {
       url: '/dash',
       views: {
@@ -66,12 +65,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
+
+    // FAVORITES PAGE
+    .state('tab.favorites', {
+      url: '/favorites',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/favorites.html',
+          controller: 'FavoritesCtrl'
+        }
+      }
+    })
     
     // INGREDIENTS CHECKBOXES
     .state('tab.ingredients', {
       url: '/ingredients',
       views: {
-        'tab-dash': { // View is tab-dash because it transitions from dashboard
+        'tab-dash': {
           templateUrl: 'templates/ingredients.html',
           controller: 'IngredientsCtrl'
         }
@@ -82,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     .state('tab.ingredients-results', {
       url: '/ingredients/results',
       views: {
-        'tab-dash': { // View is tab-dash because it transitions from dashboard
+        'tab-dash': {
           templateUrl: 'templates/ingredients-results.html',
           controller: 'IngredientsResultsCtrl'
         }
@@ -129,17 +139,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
-    /*
-    .state('tab.follow', {
-      url: '/addfollower',
-      views: {
-        'tab-follow': {
-          templateUrl: 'templates/follow.html',
-          controller: 'FollowerCtrl'
-        }
-      }
-    })
-    */
 
     .state('tab.account', {
       url: '/account',
