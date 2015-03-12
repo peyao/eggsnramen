@@ -552,12 +552,12 @@ angular.module('starter.controllers', [])
 
     var hideSheet = $ionicActionSheet.show({
       buttons: [
-        { text: 'Add <b>' + $scope.recipe.name + '</b> to your favorites!' },
-        { text: 'Go back to the dashboard.' }
+        { text: 'Go back to the dashboard.' },
+        { text: 'Add <b>' + $scope.recipe.name + '</b> to your favorites!' }
       ],
       cancelText: 'Cancel',
       buttonClicked: function(index) {
-        if (index === 0) {
+        if (index === 1) {
           if ($rootScope.loggedIn)
             UserSessionService.addRecipeToFavorites(UserSessionService.getUserName(), $scope.recipe.name, function(success) {
               if (success) {
@@ -579,7 +579,7 @@ angular.module('starter.controllers', [])
         }
 
         // Back to dashboard
-        else if (index === 1) {
+        else if (index === 0) {
           //$state.go('tab.dash');          
           $window.location.replace("/");
         }
