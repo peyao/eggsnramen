@@ -6,7 +6,6 @@ var passport = require('passport'),
 module.exports = passport.use(new LocalStrategy(
 	function(username, password, done) {
 
-		console.log("In authentication.js. " + username + ":" + password);
 		User.findOne({ 'username': username }, function(err, user) {
 			if (err) { return done(err); }
 			if (!user) {
@@ -18,13 +17,11 @@ module.exports = passport.use(new LocalStrategy(
 
 				// Password failed...
 				if (res === false) {
-					console.log("bcrypt: Password did not match!");
 					user.err = "Incorrect password";
 					return done(err, false, { message: 'Incorrect password.' });
 				}
 
 				// Password matches!
-				console.log("bcrypt: Password matches!");
 				return done(null, user);
 			});
 		});

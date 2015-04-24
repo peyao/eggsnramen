@@ -21,8 +21,6 @@ angular.module('starter.controllers', [])
   setTabLoginStatus($rootScope);
 })
 
-
-
 .controller('DashCtrl', function($scope, $rootScope, UserSessionService, RecipeService, 
     Analytics, $ionicActionSheet, $ionicPopup, $state, UserRecipeListService) {
 
@@ -284,6 +282,8 @@ angular.module('starter.controllers', [])
       }
     });
   };
+
+  // ZingCharts
 
 })
 
