@@ -29,7 +29,6 @@ module.exports = {
   },
 
   getPopular: function(callback) {
-    console.log("in getPopular");
     Recipe.find({})
       .sort('-times_used')
       .limit(5)

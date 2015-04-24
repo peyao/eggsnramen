@@ -246,13 +246,48 @@ angular.module('starter.controllers', [])
   $scope.otherUser = FollowService.get($stateParams.userName);
 })
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $ionicLoading, $window, UserSessionService, Analytics) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $ionicPopup, $ionicLoading, $window, UserSessionService, Analytics, UserRecipeListService) {
 
   Analytics.trackPage('account');
 
   // Sets the username on the account page, left of the Edit button
   $scope.user = UserSessionService.getUserObject();
-  //$scope.user.name = UserSessionService.getUserName();
+  $scope.zingData = [0,0,0];
+  $scope.zingObj = {};
+
+  var sortedRecipes = [];
+  UserRecipeListService.getRecipesFromDB(function(recipeList) {
+    sortedRecipes = recipeList;
+
+    for (var i = 0; i < $scope.user.recipe_history.length; i = i + 1) {
+      for (var j = 0; j < sortedRecipes.length; j = j + 1) {
+        if (sortedRecipes[j].name === $scope.user.recipe_history[i]) {
+          $scope.zingData[sortedRecipes[j].difficulty]++;
+        }
+      }
+    }
+
+    $scope.zingObj = {
+      type : 'pie3d',
+      backgroundColor : "#FFFFFF",
+      series : [
+        {
+          text : 'Beginner',
+          values : [$scope.zingData[0]]
+        },
+        {
+          text : 'Intermediate',
+          values : [$scope.zingData[1]]
+        },
+        {
+          text : 'Advanced',
+          values : [$scope.zingData[2]]
+        }
+      ]
+    };
+  });
+
+  
   
   //User logout
   $scope.logOut = function(){
@@ -282,9 +317,6 @@ angular.module('starter.controllers', [])
       }
     });
   };
-
-  // ZingCharts
-
 })
 
 // User Login
@@ -540,9 +572,6 @@ angular.module('starter.controllers', [])
   // Called when user clicks 'Done>' button on nav-bar
   $scope.finishedCooking = function() {
 
-    // Redirect
-    //$state.go('tab.recipe-done', { name: $scope.recipe.name });
-    
     // Log cooking complete to the user's history in database
     UserSessionService.addRecipeToHistory(UserSessionService.getUserName(), $scope.recipe.name, function(status) {
       if (!status)
@@ -580,7 +609,6 @@ angular.module('starter.controllers', [])
 
         // Back to dashboard
         else if (index === 0) {
-          //$state.go('tab.dash');          
           $window.location.replace("/");
         }
       }

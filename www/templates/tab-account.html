@@ -2,7 +2,14 @@
   <ion-content has-header="true" padding="true">
     
     <!-- ZingChart -->
-    <zingchart id="chart-1" zc-values="myData" zc-height="300" zc-width="500" zc-type="bar"></zingchart>
+    <div class="card">
+      <div class="item item-divider">
+        Difficulty of Recipes   
+      </div>
+      <div class="item">
+        <zingchart class="center" id="chart-1" zc-json="zingObj" zc-width="100%" zc-height="100%"></zingchart>
+      </div>
+    </div>
 
     <div class="list">
     	<div class="item item-divider">

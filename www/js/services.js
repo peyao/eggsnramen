@@ -245,11 +245,7 @@ servicesModule.factory('UserSessionService', function($http){
 // Manages the User's Recipe List
 servicesModule.factory('UserRecipeListService', function($http){
 
-  // This collects `why` the recipe was selected (due to which ingredients)
-  //var whyResultIngredientList = [];
-  
   var sortedRecipes = [];
-  //var currentRecipe = {}; // Recipe obj that user selected to cook
 
   // sortByKey
   // Input  :: String matching JSON key you want to sort.

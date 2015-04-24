@@ -204,7 +204,6 @@ app.put('/api/recipe/:recipeName', function(req, res) {
 });
 
 app.get('/api/popular', function(req, res) {
-  console.log('Calling getPopular');
   recipeActions.getPopular(function(recipes) {
     if (recipes)
       res.send(recipes);
