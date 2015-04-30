@@ -3,4 +3,5 @@
 
 Check the Wiki for documentation.
 
+View in a mobile browser!
 http://eggsnramen.herokuapp.com
